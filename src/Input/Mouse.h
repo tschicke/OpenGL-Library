@@ -37,16 +37,19 @@ public:
 	static void setLastMove(int dx, int dy);
 	static glm::vec2 getLastMove();
 
+	static void setMouseWheelDelta(int delta);
+	static int getMouseWheelDelta();
+
 	static void setLocked(bool isLocked);
 	static bool isLocked();
 
-	static void clearEvents();
-
-	static void setButton(int button, bool value);
-	static bool isButtonPressed(Button button);
+	static void setMouseButton(int button, bool value);
+	static bool isMouseButtonPressed(Button button);
 
 	static void setMouseButtonEvent(int button, MouseButtonEventType type);
 	static MouseButtonEventType checkMouseButtonEvent(Button button);
+
+	static void clear();
 private:
 	Mouse();
 	Mouse(const Mouse& mouse);
@@ -59,6 +62,7 @@ private:
 
 	static bool buttons[buttonCount];
 	static MouseButtonEventType buttonEvents[buttonCount];
+	static int mouseWheelDelta;
 };
 
 } /* namespace ts */

@@ -13,6 +13,7 @@ namespace ts {
 
 bool Mouse::buttons[];
 Mouse::MouseButtonEventType Mouse::buttonEvents[];
+int Mouse::mouseWheelDelta;
 
 glm::vec2 Mouse::position;
 bool Mouse::locked;
@@ -64,17 +65,18 @@ bool Mouse::isLocked() {
 	return locked;
 }
 
-void Mouse::clearEvents() {
+void Mouse::clear() {
 	for (int i = 0; i < buttonCount; ++i) {
 		buttonEvents[i] = defaultEventType;
 	}
+	mouseWheelDelta = 0;
 }
 
-void Mouse::setButton(int button, bool value) {
+void Mouse::setMouseButton(int button, bool value) {
 	buttons[button] = value;
 }
 
-bool Mouse::isButtonPressed(Button button) {
+bool Mouse::isMouseButtonPressed(Button button) {
 	return buttons[button];
 }
 
@@ -86,3 +88,11 @@ Mouse::MouseButtonEventType Mouse::checkMouseButtonEvent(Button button) {
 	return buttonEvents[button];
 }
 } /* namespace ts */
+
+void ts::Mouse::setMouseWheelDelta(int delta) {
+	mouseWheelDelta = delta;
+}
+
+int ts::Mouse::getMouseWheelDelta() {
+	return mouseWheelDelta;
+}

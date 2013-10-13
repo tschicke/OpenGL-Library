@@ -32,6 +32,8 @@ public:
 	using sf::Window::create;
 
 protected:
+	void initGL();
+
 	bool running;
 	void run();
 
