@@ -29,10 +29,14 @@ public:
 
 	void setScene(Scene * newScene);
 
+	void setBackgroundColorb(ubyte r, ubyte g, ubyte b);
+	void setBackgroundColorf(float r, float g, float b);
+
 	using sf::Window::create;
 
 protected:
 	void initGL();
+	void init();
 
 	bool running;
 	void run();
@@ -41,9 +45,13 @@ protected:
 	void update(time_t dt);
 	void render();
 
+	void cleanUp();
+
 	Scene * currentScene;
 
 	sf::Clock clock;
+
+	int width, height;
 };
 
 } /* namespace ts */
