@@ -43,7 +43,7 @@ void Window::create(int width, int height, const char* title) {
 	setBackgroundColorf(1.f, 1.f, 1.f);
 }
 
-void init(){
+void Window::init(){
 	MathHelper::init();
 }
 

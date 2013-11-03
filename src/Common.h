@@ -11,6 +11,8 @@
 namespace ts{
 
 typedef int time_t;
+typedef int shader_type_t;
+
 typedef char byte;
 typedef unsigned char ubyte;
 
