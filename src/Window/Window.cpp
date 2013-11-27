@@ -133,8 +133,6 @@ void Window::render() {
 void Window::initGL() {
 	glEnable(GL_DEPTH_TEST);
 
-	glClearColor(0.5f, 0.5f, 0.5f, 1.f);
-
 	glewExperimental = GL_TRUE;
 	if (glewInit() != GLEW_OK) {
 		std::cerr << "Glew not initialized properly\n";

@@ -28,7 +28,7 @@ public:
 
 	glm::vec3 getPosition();
 	glm::vec3 getDirection();
-	glm::mat4 getViewMatrix();
+	glm::mat4 * getViewMatrix();
 private:
 	glm::vec3 position;
 	glm::vec3 lookDir;

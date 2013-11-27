@@ -61,12 +61,12 @@ void Camera::rotate(int dx, int dy) {
 	pitch = (pitch < -180 ? -180 : (pitch > 180 ? 180 : pitch));
 }
 
-glm::mat4 Camera::getViewMatrix() {
+glm::mat4 * Camera::getViewMatrix() {
 	if (viewMatrixNeedsUpdate) {
 		viewMatrix = glm::lookAt(position, position + lookDir, glm::vec3(0, 1, 0));
 		viewMatrixNeedsUpdate = false;
 	}
-	return viewMatrix;
+	return &viewMatrix;
 }
 
 } /* namespace ts */
