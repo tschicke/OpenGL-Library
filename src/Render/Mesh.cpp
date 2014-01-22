@@ -7,8 +7,8 @@
 
 #include "Mesh.h"
 
-#include <gl/gl.h>
 #include <gl/glew.h>
+#include <gl/gl.h>
 
 namespace ts {
 

@@ -96,7 +96,7 @@ void Model::draw(Camera* camera) {
 	shaderProgram->useProgram();
 	shaderProgram->setUniform("modelMatrix", &modelMatrix);
 	shaderProgram->setUniform("viewMatrix", camera->getViewMatrix());
-	shaderProgram->setUniform("projectionMatrix", );//TODO make projection matrix
+//	shaderProgram->setUniform("projectionMatrix", );//TODO make projection matrix
 }
 
 } /* namespace ts */

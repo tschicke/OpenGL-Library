@@ -7,8 +7,11 @@
 
 #include "Texture.h"
 
-#include <gl/gl.h>
 #include <gl/glew.h>
+#include <gl/gl.h>
+
+#include <iostream>
+#include <fstream>
 
 Texture::Texture() {
 	textureID = -1;
@@ -40,6 +43,8 @@ bool Texture::loadDDS(const char* texturePath) {
 		std::cerr << "ERROR: File " << texturePath << " not a .DDS File\n";
 		return false;
 	}
+
+	return true;
 }
 
 void Texture::unbindTexture(){

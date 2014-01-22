@@ -26,7 +26,7 @@ public:
 	void deleteMesh();
 
 protected:
-	int vertexID, indexID;
+	unsigned int vertexID, indexID;
 	int numVertices, numIndices;
 
 	bool textured;
