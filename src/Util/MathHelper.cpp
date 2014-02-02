@@ -22,21 +22,23 @@ void MathHelper::cleanup() {
 	delete SIN_TABLE;
 }
 
-float MathHelper::sin_float(float radians) {
-	radians = fmodf(radians, 2.0 * MATH_PI);
-	if (radians < 0) {
-		radians += 2.f * MATH_PI;
+//Returns sine of angle (in radians)
+float MathHelper::sin_float(float angle) {
+	angle = fmodf(angle, 2.0 * MATH_PI);
+	if (angle < 0) {
+		angle += 2.f * MATH_PI;
 	}
-	return SIN_TABLE[(int) (radians * 572.9578f)];
+	return SIN_TABLE[(int) (angle * 572.9578f)];
 }
 
-float MathHelper::cos_float(float radians) {
-	radians += toRadians(90);
-	radians = fmodf(radians, 2.0 * MATH_PI);
-	if (radians < 0) {
-		radians += 2.f * MATH_PI;
+//Returns cosine of and (in radians)
+float MathHelper::cos_float(float angle) {
+	angle += toRadians(90);
+	angle = fmodf(angle, 2.0 * MATH_PI);
+	if (angle < 0) {
+		angle += 2.f * MATH_PI;
 	}
-	return SIN_TABLE[(int) (radians * 572.9578f)];
+	return SIN_TABLE[(int) (angle * 572.9578f)];
 }
 
 float MathHelper::toRadians(float degrees) {
@@ -45,4 +47,26 @@ float MathHelper::toRadians(float degrees) {
 
 float MathHelper::toDegrees(float radians) {
 	return radians * 180.f / MATH_PI;
+}
+
+//Returns the larger of a and b. If a and b are equal, returns b.
+int MathHelper::max(int a, int b) {
+	return (a > b ? a : b);
+}
+
+//Returns the larger of a and b. If a and b are equal, returns b.
+float MathHelper::maxf(float a, float b) {
+	return (a > b ? a : b);
+}
+
+//Returns the smaller of a and b. If a and b are equal, returns b.
+int MathHelper::min(int a, int b) {
+	return (a < b ? a : b);
+
+}
+
+//Returns the smaller of a and b. If a and b are equal, returns b.
+float MathHelper::minf(float a, float b) {
+	return (a < b ? a : b);
+
 }

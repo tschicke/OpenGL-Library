@@ -21,7 +21,8 @@ class ResourceManager {
 public:
 	static ResourceManager * getResourceManger;
 
-	bool loadMesh(std::string meshName);
+	bool loadMeshFromFile(std::string meshName);
+	bool loadMeshFromData(std::string meshName, float * vertexData, unsigned int * indexData, int numVertices, int numIndices);
 	bool loadShaderProgram(std::string shaderProgramName);
 	bool loadTexture(std::string textureName);
 

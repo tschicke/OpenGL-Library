@@ -23,30 +23,8 @@ Mesh::Mesh() {
 Mesh::~Mesh() {
 }
 
-bool Mesh::loadMeshFromOBJ(const char* objPath) {
-	textured = true;
-}
-
-bool Mesh::loadMeshFromData(float* vertexData, int numVertices, unsigned int* indices, int numIndices, bool textured) {
-	this->textured = textured;
-	this->numVertices = numVertices;
-	this->numIndices = numIndices;
-
-	glGenBuffers(1, &vertexID);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * numVertices, vertexData, GL_DYNAMIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	glGenBuffers(1, &indexID);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned) * numIndices, indices, GL_DYNAMIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-	return true;
-}
-
 void Mesh::render() {
-	if (vertexID == -1 || indexID == -1) {
+	if (vertexID == (unsigned int) -1 || indexID == (unsigned int) -1) {
 		return;
 	}
 

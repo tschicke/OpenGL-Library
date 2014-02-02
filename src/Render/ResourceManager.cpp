@@ -7,6 +7,8 @@
 
 #include "ResourceManager.h"
 
+#include "../Util/MathHelper.h"
+
 #include <iostream>
 #include <fstream>
 
@@ -21,7 +23,7 @@ ResourceManager::ResourceManager() {
 ResourceManager::~ResourceManager() {
 }
 
-bool ResourceManager::loadMesh(std::string meshName) {
+bool ResourceManager::loadMeshFromFile(std::string meshName) {
 	return false;
 }
 
@@ -30,7 +32,7 @@ bool ResourceManager::loadShaderProgram(std::string shaderProgramName) {
 }
 
 bool ResourceManager::loadTexture(std::string textureName) {
-	if(textureMap.find(textureName) != textureMap.end()){
+	if (textureMap.find(textureName) != textureMap.end()) {
 		std::cerr << "Error loading texture: " << textureName << " - " << textureName << " is already loaded" << std::endl;
 	}
 
@@ -81,14 +83,30 @@ bool ResourceManager::loadTexture(std::string textureName) {
 		return false;
 	}
 
+	unsigned int * textureID = &(texture->textureID);
+	glGenTextures(1, textureID);
+	glBindTexture(GL_TEXTURE_2D, *textureID);
 
+	unsigned int block_size = ((format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT) ? 8 : 16);
+	unsigned int offset = 0;
+
+	/*Load texture and mipmaps*/
+	for (unsigned int level = 0; level < 1 && (width || height); level++) {
+		unsigned int size = MathHelper::max((width / 4), 1) * MathHelper::max((height / 4), 1) * block_size;
+		glCompressedTexImage2D(GL_TEXTURE_2D, level, format, width, height, 0, size, buffer + offset);
+
+		offset += size;
+		width /= 2;
+		height /= 2;
+	}
+	delete buffer;
 
 	return true;
 }
 
 Mesh * ResourceManager::getMesh(std::string meshName) {
 	if (meshMap.find(meshName) == meshMap.end()) { //Does not contain
-		bool load = loadMesh(meshName);
+		bool load = loadMeshFromFile(meshName);
 		if (!load) {
 			return NULL;
 		}
@@ -114,6 +132,49 @@ Texture * ResourceManager::getTexture(std::string textureName) {
 		}
 	}
 	return textureMap.at(textureName);
+}
+
+void ResourceManager::deleteMesh(std::string meshName) {
+}
+
+void ResourceManager::deleteShaderProgram(std::string shaderProgramName) {
+}
+
+void ResourceManager::deleteTexture(std::string textureName) {
+	if (textureMap.find(textureName) == textureMap.end()) {
+		return;
+	}
+	Texture * texture = textureMap.at(textureName);
+	glDeleteTextures(1, &(texture->textureID));
+	textureMap.erase(textureName);
+	delete texture;
+}
+
+void ResourceManager::cleanupMeshes() {
+	std::map<std::string, Mesh *>::iterator iterator = meshMap.begin();
+	while (iterator != meshMap.end()) {
+		iterator = meshMap.erase(iterator);
+	}
+}
+
+void ResourceManager::cleanupShaderPrograms() {
+	std::map<std::string, ShaderProgram *>::iterator iterator = shaderProgramMap.begin();
+	while (iterator != shaderProgramMap.end()) {
+		iterator = shaderProgramMap.erase(iterator);
+	}
+}
+
+void ResourceManager::cleanupTextures() {
+	std::map<std::string, Texture *>::iterator iterator = textureMap.begin();
+	while (iterator != textureMap.end()) {
+		iterator = textureMap.erase(iterator);
+	}
+}
+
+void ResourceManager::cleanupAll() {
+	cleanupMeshes();
+	cleanupShaderPrograms();
+	cleanupTextures();
 }
 
 } /* namespace ts */

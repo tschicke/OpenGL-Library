@@ -18,9 +18,6 @@ public:
 	Mesh();
 	virtual ~Mesh();
 
-	bool loadMeshFromOBJ(const char * objPath);
-	bool loadMeshFromData(float * vertexData, int numVertices, unsigned int * indices, int numIndices, bool textured);
-
 	void render();
 
 	void deleteMesh();
