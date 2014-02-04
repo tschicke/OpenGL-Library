@@ -22,6 +22,7 @@ public:
 
 	void deleteMesh();
 
+	friend class ResourceManager;
 protected:
 	unsigned int vertexID, indexID;
 	int numVertices, numIndices;

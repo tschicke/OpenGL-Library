@@ -27,6 +27,47 @@ bool ResourceManager::loadMeshFromFile(std::string meshName) {
 	return false;
 }
 
+bool ResourceManager::loadMeshFromData(std::string meshName, float* vertexData, unsigned int* indexData, int numVertices, int numIndices, bool textured) {
+	if (meshMap.find(meshName) != meshMap.end()) {
+		std::cerr << "Error loading mesh: " << meshName << " - " << meshName << " is already loaded" << std::endl;
+		return false;
+	}
+	if (vertexData == NULL || indexData == NULL) {
+		std::cerr << "Error loading mesh: " << meshName << " - vertexData or indexData is NULL" << std::endl;
+		return false;
+	}
+	if (numVertices == 0 || numIndices == 0) {
+		std::cerr << "Error loading mesh: " << meshName << " - numVertices or numIndices is 0" << std::endl;
+		return false;
+	}
+
+	Mesh * mesh = new Mesh;
+	mesh->numVertices = numVertices;
+	mesh->numIndices = numIndices;
+	mesh->textured = textured;
+	unsigned int * vertexArrayID = &(mesh->vertexID);
+	unsigned int * indexArrayID = &(mesh->indexID);
+
+	int vertexSize = 3;
+	int colorSize = (textured ? 2 : 3);
+	int normalSize = 3;
+
+	glGenBuffers(1, vertexArrayID);
+	glGenBuffers(1, indexArrayID);
+
+	glBindBuffer(GL_ARRAY_BUFFER, *vertexArrayID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * numVertices * (vertexSize + colorSize + normalSize), vertexData, GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *indexArrayID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * numIndices, indexData, GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	meshMap.insert(std::pair<std::string, Mesh *>(meshName, mesh));
+
+	return true;
+}
+
 bool ResourceManager::loadShaderProgram(std::string shaderProgramName) {
 	return false;
 }
@@ -34,6 +75,7 @@ bool ResourceManager::loadShaderProgram(std::string shaderProgramName) {
 bool ResourceManager::loadTexture(std::string textureName) {
 	if (textureMap.find(textureName) != textureMap.end()) {
 		std::cerr << "Error loading texture: " << textureName << " - " << textureName << " is already loaded" << std::endl;
+		return false;
 	}
 
 	Texture * texture = new Texture;
@@ -100,6 +142,8 @@ bool ResourceManager::loadTexture(std::string textureName) {
 		height /= 2;
 	}
 	delete buffer;
+
+	textureMap.insert(std::pair<std::string, Texture *>(textureName, texture));
 
 	return true;
 }

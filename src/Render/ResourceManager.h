@@ -22,7 +22,7 @@ public:
 	static ResourceManager * getResourceManger;
 
 	bool loadMeshFromFile(std::string meshName);
-	bool loadMeshFromData(std::string meshName, float * vertexData, unsigned int * indexData, int numVertices, int numIndices);
+	bool loadMeshFromData(std::string meshName, float * vertexData, unsigned int * indexData, int numVertices, int numIndices, bool textured);
 	bool loadShaderProgram(std::string shaderProgramName);
 	bool loadTexture(std::string textureName);
 
