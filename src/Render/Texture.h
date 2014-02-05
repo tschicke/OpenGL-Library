@@ -21,7 +21,6 @@ public:
 	friend class ResourceManager;
 protected:
 	unsigned int textureID;
-
 };
 
 }

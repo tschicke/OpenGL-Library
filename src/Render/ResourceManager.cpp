@@ -69,7 +69,15 @@ bool ResourceManager::loadMeshFromData(std::string meshName, float* vertexData, 
 }
 
 bool ResourceManager::loadShaderProgram(std::string shaderProgramName) {
-	return false;
+	if (shaderProgramMap.find(shaderProgramName) != shaderProgramMap.end()) {
+		std::cerr << "Error loading shader program: " << shaderProgramName << " - " << shaderProgramName << " is already loaded" << std::endl;
+		return false;
+	}
+
+	ShaderProgram * shaderProgram = new ShaderProgram;
+	Shader vertexShader, fragmentShader;
+
+	return true;
 }
 
 bool ResourceManager::loadTexture(std::string textureName) {

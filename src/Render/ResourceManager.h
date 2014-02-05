@@ -47,7 +47,8 @@ private:
 	static ResourceManager resourceManager;
 
 	std::map<std::string, Mesh *> meshMap;
-	//std::map<std::string, Shader *> shaderMap;//TODO implement shader map too
+	std::map<std::string, Shader *> vertexShaderMap;
+	std::map<std::string, Shader *> fragmentShaderMap;
 	std::map<std::string, ShaderProgram *> shaderProgramMap;
 	std::map<std::string, Texture *> textureMap;
 };

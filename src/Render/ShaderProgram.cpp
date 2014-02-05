@@ -1,20 +1,20 @@
 /*
- * Shader.cpp
+ * ShaderProgram.cpp
  *
  *  Created on: Feb 5, 2014
  *      Author: Tyler
  */
 
-#include "Shader.h"
+#include "ShaderProgram.h"
 
 namespace ts {
 
-Shader::Shader() {
+ShaderProgram::ShaderProgram() {
 	// TODO Auto-generated constructor stub
 
 }
 
-Shader::~Shader() {
+ShaderProgram::~ShaderProgram() {
 	// TODO Auto-generated destructor stub
 }
 
