@@ -12,22 +12,22 @@
 #include <string>
 
 #include "Mesh.h"
-#include "Shader.h"
+#include "ShaderProgram.h"
 #include "Texture.h"
 
 namespace ts {
 
 class ResourceManager {
 public:
-	static ResourceManager * getResourceManger;
+	static ResourceManager * getResourceManger();
 
 	bool loadMeshFromFile(std::string meshName);
 	bool loadMeshFromData(std::string meshName, float * vertexData, unsigned int * indexData, int numVertices, int numIndices, bool textured);
-	bool loadShaderProgram(std::string shaderProgramName);
+	bool loadShaderProgram(std::string vertexShaderName, std::string fragmentShaderName);
 	bool loadTexture(std::string textureName);
 
 	Mesh * getMesh(std::string meshName);
-	ShaderProgram * getShaderProgram(std::string shaderProgramName);
+	ShaderProgram * getShaderProgram(std::string vertexShaderName, std::string fragmentShaderName);
 	Texture * getTexture(std::string textureName);
 
 	void deleteMesh(std::string meshName);
@@ -47,8 +47,6 @@ private:
 	static ResourceManager resourceManager;
 
 	std::map<std::string, Mesh *> meshMap;
-	std::map<std::string, Shader *> vertexShaderMap;
-	std::map<std::string, Shader *> fragmentShaderMap;
 	std::map<std::string, ShaderProgram *> shaderProgramMap;
 	std::map<std::string, Texture *> textureMap;
 };

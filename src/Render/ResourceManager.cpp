@@ -68,14 +68,33 @@ bool ResourceManager::loadMeshFromData(std::string meshName, float* vertexData, 
 	return true;
 }
 
-bool ResourceManager::loadShaderProgram(std::string shaderProgramName) {
-	if (shaderProgramMap.find(shaderProgramName) != shaderProgramMap.end()) {
-		std::cerr << "Error loading shader program: " << shaderProgramName << " - " << shaderProgramName << " is already loaded" << std::endl;
+bool ResourceManager::loadShaderProgram(std::string vertexShaderName, std::string fragmentShaderName) {
+	if (shaderProgramMap.find(vertexShaderName + fragmentShaderName) != shaderProgramMap.end()) {
+		std::cerr << "Error loading shader program: " << vertexShaderName + fragmentShaderName << " - Shader program with shaders " << vertexShaderName
+				<< " and " << fragmentShaderName << " is already loaded" << std::endl;
 		return false;
 	}
 
 	ShaderProgram * shaderProgram = new ShaderProgram;
-	Shader vertexShader, fragmentShader;
+	shaderProgram->shaderProgramID = glCreateProgram();
+
+	//Load Vertex Shader
+	//Compile Vertex Shader
+	//Check Vertex Shader
+	//Attach Vertex Shader
+
+	//Load Fragment Shader
+	//Compile Fragment Shader
+	//Check Fragment Shader
+	//Attach Fragment Shader
+
+	//Link Shader Program
+	//Check Shader Program
+
+	//Delete Vertex Shader
+	//Delete Fragment Shader
+
+	shaderProgramMap.insert(std::pair<std::string, ShaderProgram *>((vertexShaderName + fragmentShaderName), shaderProgram));
 
 	return true;
 }
@@ -166,14 +185,14 @@ Mesh * ResourceManager::getMesh(std::string meshName) {
 	return meshMap.at(meshName);
 }
 
-ShaderProgram * ResourceManager::getShaderProgram(std::string shaderProgramName) {
-	if (shaderProgramMap.find(shaderProgramName) == shaderProgramMap.end()) { //Does not contain
-		bool load = loadShaderProgram(shaderProgramName);
+ShaderProgram * ResourceManager::getShaderProgram(std::string vertexShaderName, std::string fragmentShaderName) {
+	if (shaderProgramMap.find(vertexShaderName + fragmentShaderName) == shaderProgramMap.end()) { //Does not contain
+		bool load = loadShaderProgram(vertexShaderName, fragmentShaderName);
 		if (!load) {
 			return NULL;
 		}
 	}
-	return shaderProgramMap.at(shaderProgramName);
+	return shaderProgramMap.at(vertexShaderName + fragmentShaderName);
 }
 
 Texture * ResourceManager::getTexture(std::string textureName) {

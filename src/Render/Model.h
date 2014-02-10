@@ -10,7 +10,8 @@
 
 #include "../Util/Camera.h"
 #include "Mesh.h"
-#include "Shader.h"
+#include "ShaderProgram.h"
+#include "Texture.h"
 #include <glm/glm.hpp>
 
 namespace ts {
