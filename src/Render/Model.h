@@ -38,14 +38,17 @@ public:
 
 	void setMesh(Mesh * mesh);
 	void setShader(ShaderProgram * shaderProgram);
+	void setTexture(Texture * texture);
 
 	void draw(Camera * camera);
 
 private:
 	Mesh * mesh;
 	ShaderProgram * shaderProgram;
+	Texture * texture;
 
 	glm::mat4 modelMatrix;
+	bool modelMatrixNeedsUpdate;
 
 	glm::vec3 position;
 	int yaw, pitch;

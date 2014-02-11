@@ -7,6 +7,12 @@
 
 #include "Model.h"
 
+#include <glm/gtx/transform.hpp>
+
+#include "../Window/Window.h"
+
+#include <iostream>
+
 namespace ts {
 
 Model::Model() {
@@ -27,6 +33,7 @@ void Model::init(Mesh * mesh, ShaderProgram * shaderProgram, glm::vec3 position,
 	this->position = position;
 	this->yaw = yaw;
 	this->pitch = pitch;
+	modelMatrixNeedsUpdate = true;
 }
 
 Model::~Model() {
@@ -38,6 +45,7 @@ void Model::translate(float x, float y, float z) {
 
 void Model::translate(glm::vec3 translateVector) {
 	position += translateVector;
+	modelMatrixNeedsUpdate = true;
 }
 
 void Model::setPosition(float x, float y, float z) {
@@ -46,6 +54,7 @@ void Model::setPosition(float x, float y, float z) {
 
 void Model::setPosition(glm::vec3 position) {
 	this->position = position;
+	modelMatrixNeedsUpdate = true;
 }
 
 glm::vec3 Model::getPosition() {
@@ -55,21 +64,25 @@ glm::vec3 Model::getPosition() {
 void Model::rotateYaw(int deltaYaw) {
 	yaw += deltaYaw;
 	yaw %= 360;
+	modelMatrixNeedsUpdate = true;
 }
 
 void Model::rotatePitch(int deltaPitch) {
 	pitch += deltaPitch;
 	pitch = (pitch < -89 ? -89 : (pitch > 89 ? 89 : pitch));
+	modelMatrixNeedsUpdate = true;
 }
 
 void Model::setYaw(int yaw) {
 	this->yaw = yaw;
 	yaw %= 360;
+	modelMatrixNeedsUpdate = true;
 }
 
 void Model::setPitch(int pitch) {
 	this->pitch = pitch;
 	pitch = (pitch < -89 ? -89 : (pitch > 89 ? 89 : pitch));
+	modelMatrixNeedsUpdate = true;
 }
 
 int Model::getYaw() {
@@ -88,15 +101,43 @@ void Model::setShader(ShaderProgram* shaderProgram) {
 	this->shaderProgram = shaderProgram;
 }
 
+void Model::setTexture(Texture* texture) {
+	this->texture = texture;
+}
+
 void Model::draw(Camera* camera) {
-	if(mesh == NULL || shaderProgram == NULL){
+	if(mesh == NULL || shaderProgram == NULL || texture == NULL){
 		return;
 	}
+	if(modelMatrixNeedsUpdate){
+		modelMatrix = glm::translate(position) * glm::rotate((float) yaw, 0.f, 1.f, 0.f) * glm::rotate((float) pitch, 1.f, 0.f, 0.f);
+		modelMatrixNeedsUpdate = false;
+	}
+
+	if(texture != NULL){
+		texture->bindTexture();
+	}
+
+	glm::mat4 viewMatrix = *(camera->getViewMatrix());
+//	glm::mat4 viewMatrix = glm::lookAt(glm::vec3(1, 1, -1), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+//	glm::mat4 projectionMatrix = *(ts::Window::getMainWindow()->getProjectionMatrix());
+	glm::mat4 projectionMatrix = glm::perspective(90.f, 1280.f/720.f, 0.1f, 100.f);
+
+	glm::mat4 MVPMatrix = projectionMatrix * viewMatrix * modelMatrix;
 
 	shaderProgram->useShaderProgram();
-	shaderProgram->setUniform("modelMatrix", &modelMatrix);
-	shaderProgram->setUniform("viewMatrix", camera->getViewMatrix());
-//	shaderProgram->setUniform("projectionMatrix", );//TODO make projection matrix
+	shaderProgram->setUniform("MVPMatrix", &MVPMatrix);
+//	shaderProgram->setUniform("modelMatrix", &modelMatrix);
+//	shaderProgram->setUniform("viewMatrix", &viewMatrix);
+//	shaderProgram->setUniform("projectionMatrix", &projectionMatrix);
+
+	mesh->render();
+
+	shaderProgram->disableShaderProgram();
+
+	if(texture != NULL){
+		texture->unbindTexture();
+	}
 }
 
 } /* namespace ts */

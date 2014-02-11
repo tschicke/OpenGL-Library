@@ -17,6 +17,12 @@
 
 namespace ts {
 
+ResourceManager ResourceManager::resourceManager;
+
+ResourceManager* ResourceManager::getResourceManger() {
+	return &resourceManager;
+}
+
 ResourceManager::ResourceManager() {
 }
 
@@ -70,29 +76,101 @@ bool ResourceManager::loadMeshFromData(std::string meshName, float* vertexData, 
 
 bool ResourceManager::loadShaderProgram(std::string vertexShaderName, std::string fragmentShaderName) {
 	if (shaderProgramMap.find(vertexShaderName + fragmentShaderName) != shaderProgramMap.end()) {
-		std::cerr << "Error loading shader program: " << vertexShaderName + fragmentShaderName << " - Shader program with shaders " << vertexShaderName
-				<< " and " << fragmentShaderName << " is already loaded" << std::endl;
-		return false;
+		std::cerr << "Error loading shader program: " << vertexShaderName + fragmentShaderName << " - Shader program with shaders " << vertexShaderName << " and " << fragmentShaderName
+				<< " is already loaded" << std::endl;
+		return true;
 	}
 
 	ShaderProgram * shaderProgram = new ShaderProgram;
 	shaderProgram->shaderProgramID = glCreateProgram();
 
 	//Load Vertex Shader
+	std::string vertexShaderCode;
+	std::ifstream vertexShaderStream((vertexShaderName + ".vert").c_str(), std::ios::in);
+	if (vertexShaderStream.is_open()) {
+		std::string line = "";
+		while (getline(vertexShaderStream, line)) {
+			vertexShaderCode += '\n' + line;
+		}
+		vertexShaderStream.close();
+	} else {
+		std::cerr << "Error loading shader program: " << vertexShaderName + fragmentShaderName << " - " << vertexShaderName << ".vert could not be opened" << std::endl;
+		glDeleteProgram(shaderProgram->shaderProgramID);
+		return false;
+	}
 	//Compile Vertex Shader
+	unsigned int vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
+	const char * vertexShaderCodePointer = vertexShaderCode.c_str();
+	glShaderSource(vertexShaderID, 1, &vertexShaderCodePointer, NULL);
+	glCompileShader(vertexShaderID);
 	//Check Vertex Shader
+	int vertexShaderCompilationStatus = 0;
+	glGetShaderiv(vertexShaderID, GL_COMPILE_STATUS, &vertexShaderCompilationStatus);
+	if (vertexShaderCompilationStatus == GL_FALSE) {
+		char infoLog[1024];
+		int logLength;
+		glGetShaderInfoLog(vertexShaderID, 1024, &logLength, infoLog);
+		std::cerr << "Error compiling vertex shader:" << vertexShaderName << " - Compiler returned " << std::endl << infoLog << std::endl;
+		glDeleteShader(vertexShaderID);
+		glDeleteProgram(shaderProgram->shaderProgramID);
+		return false;
+	}
 	//Attach Vertex Shader
+	glAttachShader(shaderProgram->shaderProgramID, vertexShaderID);
 
 	//Load Fragment Shader
+	std::string fragmentShaderCode;
+	std::ifstream fragmentShaderStream((fragmentShaderName + ".frag").c_str(), std::ios::in);
+	if (fragmentShaderStream.is_open()) {
+		std::string line = "";
+		while (getline(fragmentShaderStream, line)) {
+			fragmentShaderCode += '\n' + line;
+		}
+		fragmentShaderStream.close();
+	} else {
+		std::cerr << "Error loading shader program: " << vertexShaderName + fragmentShaderName << " - " << fragmentShaderName << ".frag could not be opened" << std::endl;
+		glDeleteShader(vertexShaderID);
+		glDeleteProgram(shaderProgram->shaderProgramID);
+		return false;
+	}
 	//Compile Fragment Shader
+	unsigned int fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+	const char * fragmentShaderCodePointer = fragmentShaderCode.c_str();
+	glShaderSource(fragmentShaderID, 1, &fragmentShaderCodePointer, NULL);
+	glCompileShader(fragmentShaderID);
 	//Check Fragment Shader
+	int fragmentShaderCompilationStatus = 0;
+	glGetShaderiv(fragmentShaderID, GL_COMPILE_STATUS, &fragmentShaderCompilationStatus);
+	if (fragmentShaderCompilationStatus == GL_FALSE) {
+		char infoLog[1024];
+		int logLength;
+		glGetShaderInfoLog(fragmentShaderID, 1024, &logLength, infoLog);
+		std::cerr << "Error compiling fragment shader:" << fragmentShaderName << " - Compiler returned " << std::endl << infoLog << std::endl;
+		glDeleteShader(vertexShaderID);
+		glDeleteShader(fragmentShaderID);
+		glDeleteProgram(shaderProgram->shaderProgramID);
+		return false;
+	}
 	//Attach Fragment Shader
+	glAttachShader(shaderProgram->shaderProgramID, fragmentShaderID);
 
 	//Link Shader Program
+	glLinkProgram(shaderProgram->shaderProgramID);
 	//Check Shader Program
+	int linkStatus = 0;
+	glGetProgramiv(shaderProgram->shaderProgramID, GL_LINK_STATUS, &linkStatus);
+	if (linkStatus == GL_FALSE) {
+		std::cerr << "Error linking shader program: " << vertexShaderName + fragmentShaderName << std::endl;
+		glDeleteShader(vertexShaderID);
+		glDeleteShader(fragmentShaderID);
+		glDeleteProgram(shaderProgram->shaderProgramID);
+		return false;
+	}
 
 	//Delete Vertex Shader
+	glDeleteShader(vertexShaderID);
 	//Delete Fragment Shader
+	glDeleteShader(fragmentShaderID);
 
 	shaderProgramMap.insert(std::pair<std::string, ShaderProgram *>((vertexShaderName + fragmentShaderName), shaderProgram));
 
@@ -107,7 +185,7 @@ bool ResourceManager::loadTexture(std::string textureName) {
 
 	Texture * texture = new Texture;
 
-	std::ifstream file(textureName.c_str());
+	std::ifstream file((textureName + ".DDS").c_str());
 	if (!file.is_open()) {
 		std::cerr << "Error loading texture: " << textureName << " - invalid file name" << std::endl;
 		return false;

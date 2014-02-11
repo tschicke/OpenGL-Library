@@ -8,9 +8,9 @@
 #include "src/Window/Window.h"
 
 int main(){
-	ts::Window window;
-	window.create(1280, 720, "OGL Lib");
-	window.setBackgroundColorf(0.5f, 0.5f, 0.5f);
-	window.start();
+	ts::Window * mainWindow = ts::Window::getMainWindow();
+	mainWindow->create(1280, 720, 90, "OGL Lib");
+	mainWindow->setBackgroundColorf(0.5f, 0.5f, 0.5f);
+	mainWindow->start();
 }
 

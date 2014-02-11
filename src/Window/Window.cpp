@@ -8,6 +8,7 @@
 #include "Window.h"
 
 #include <gl/glew.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "Scene.h"
 
@@ -18,32 +19,76 @@
 
 #include <iostream>
 
+#include "../Render/ResourceManager.h"
+
 namespace ts {
+
+Window * Window::mainWindow = new Window;
+
+Window* Window::getMainWindow() {
+	return mainWindow;
+}
 
 Window::Window() {
 	width = height = 0;
+	FOV = 90;
 	running = false;
 	currentScene = NULL;
+	printFPS = true;
 }
 
-Window::Window(int width, int height, const char* title) {
-	create(width, height, title);
+Window::Window(int width, int height, int FOV, const char* title) {
+	create(width, height, FOV, title);
 }
 
 Window::~Window() {
 }
 
-void Window::create(int width, int height, const char* title) {
+void Window::create(int width, int height, int FOV, const char* title) {
 	this->width = width;
 	this->height = height;
+	this->FOV = FOV;
+	projectionMatrix = glm::perspective((float)FOV, (float)width / (float) height, 0.1f, 200.f);
 	running = false;
+	printFPS = true;
 	create(sf::VideoMode(width, height, 32), title);
+	setFramerateLimit(60);//TODO make way of changing this
 	initGL();
 	init();
 	setBackgroundColorf(1.f, 1.f, 1.f);
+
+	ResourceManager * manager = ResourceManager::getResourceManger();
+	float data[] = {
+			0, 0, 0,
+			10, 0, 0,
+			10, 10, 0,
+			0, 10, 0,
+
+			0, 0,
+			10, 0,
+			10, 10,
+			0, 10,
+
+			0, 0, 0,
+			0, 0, 0,
+			0, 0, 0,
+			0, 0, 0
+	};
+
+	unsigned int indices[] = {
+			0, 1, 2, 0, 2, 3
+	};
+	manager->loadShaderProgram(std::string("textureShader"), std::string("textureShader"));
+	manager->loadMeshFromData(std::string("mesh"), data, indices, 4, 6, true);
+	manager->loadTexture("Button1_default");
+
+	testModel = Model(manager->getMesh("mesh"), manager->getShaderProgram(std::string("textureShader"), std::string("textureShader")), glm::vec3(0, 0, 0), 0, 0);
+	testModel.setTexture(manager->getTexture("Button1_default"));
+
+	testCamera.setPosition(0, 0, 10);
 }
 
-void Window::init(){
+void Window::init() {
 	MathHelper::init();
 }
 
@@ -67,9 +112,22 @@ void Window::setScene(Scene* newScene) {
 }
 
 void Window::run() {
+	long counter = 0;
+	int frames = 0;
 	while (running) {
+		long dt = clock.restart().asMicroseconds();
+		counter += dt;
+		frames++;
+		if (counter >= 1000000) {
+			if (printFPS) {
+				std::cout << frames << std::endl;
+			}
+			counter = 0;
+			frames = 0;
+		}
+
 		updateInput();
-		update(clock.restart().asMilliseconds());
+		update(dt);
 		render();
 	}
 	cleanUp();
@@ -127,6 +185,8 @@ void Window::render() {
 	if (currentScene != NULL) {
 		currentScene->draw();
 	}
+
+	testModel.draw(&testCamera);
 	display();
 }
 
@@ -138,6 +198,14 @@ void Window::initGL() {
 		std::cerr << "Glew not initialized properly\n";
 		exit(EXIT_FAILURE);
 	}
+}
+
+void Window::setFOV(int FOV) {
+	this->FOV = FOV;
+}
+
+glm::mat4* Window::getProjectionMatrix() {
+	return &projectionMatrix;
 }
 
 void Window::cleanUp() {

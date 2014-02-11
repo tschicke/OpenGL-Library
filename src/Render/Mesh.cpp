@@ -10,6 +10,8 @@
 #include <gl/glew.h>
 #include <gl/gl.h>
 
+#include <iostream>
+
 namespace ts {
 
 Mesh::Mesh() {
@@ -36,6 +38,7 @@ void Mesh::render() {
 	int vertexSize = 3;
 	int textureSize = (textured ? 2 : 3);
 	int normalSize = 3;
+
 	//Vertex
 	glVertexAttribPointer(0, vertexSize, GL_FLOAT, GL_FALSE, 0, (void *) 0);
 	//Texture
@@ -45,7 +48,7 @@ void Mesh::render() {
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexID);
 
-	glDrawArrays(GL_TRIANGLES, 0, numIndices);
+	glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, 0);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
