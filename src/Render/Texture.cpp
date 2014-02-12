@@ -23,7 +23,9 @@ Texture::~Texture() {
 }
 
 void Texture::bindTexture(){
-	if(textureID == (unsigned int) -1) return;
+	if(textureID == (unsigned int) -1) {
+		return;
+	}
 	glBindTexture(GL_TEXTURE_2D, textureID);
 }
 

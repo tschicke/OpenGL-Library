@@ -69,7 +69,7 @@ void Model::rotateYaw(int deltaYaw) {
 
 void Model::rotatePitch(int deltaPitch) {
 	pitch += deltaPitch;
-	pitch = (pitch < -89 ? -89 : (pitch > 89 ? 89 : pitch));
+	pitch %= 360;
 	modelMatrixNeedsUpdate = true;
 }
 
@@ -119,9 +119,7 @@ void Model::draw(Camera* camera) {
 	}
 
 	glm::mat4 viewMatrix = *(camera->getViewMatrix());
-//	glm::mat4 viewMatrix = glm::lookAt(glm::vec3(1, 1, -1), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-//	glm::mat4 projectionMatrix = *(ts::Window::getMainWindow()->getProjectionMatrix());
-	glm::mat4 projectionMatrix = glm::perspective(90.f, 1280.f/720.f, 0.1f, 100.f);
+	glm::mat4 projectionMatrix = *(ts::Window::getMainWindow()->getProjectionMatrix());
 
 	glm::mat4 MVPMatrix = projectionMatrix * viewMatrix * modelMatrix;
 

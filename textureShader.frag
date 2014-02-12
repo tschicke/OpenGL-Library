@@ -12,4 +12,5 @@ void main(){
 	glUV.x = UV.x;
 	glUV.y = 1.0 - UV.y;
 	color = texture2D(myTextureSampler, UV).rgb;
+	//color = vec3(UV, 0);
 }

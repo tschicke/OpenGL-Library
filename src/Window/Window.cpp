@@ -48,44 +48,14 @@ void Window::create(int width, int height, int FOV, const char* title) {
 	this->width = width;
 	this->height = height;
 	this->FOV = FOV;
-	projectionMatrix = glm::perspective((float)FOV, (float)width / (float) height, 0.1f, 200.f);
+	projectionMatrix = glm::perspective((float) FOV, (float) width / (float) height, 0.1f, 200.f);
 	running = false;
 	printFPS = true;
 	create(sf::VideoMode(width, height, 32), title);
-	setFramerateLimit(60);//TODO make way of changing this
+	setFramerateLimit(60); //TODO make way of changing this
 	initGL();
 	init();
 	setBackgroundColorf(1.f, 1.f, 1.f);
-
-	ResourceManager * manager = ResourceManager::getResourceManger();
-	float data[] = {
-			0, 0, 0,
-			10, 0, 0,
-			10, 10, 0,
-			0, 10, 0,
-
-			0, 0,
-			10, 0,
-			10, 10,
-			0, 10,
-
-			0, 0, 0,
-			0, 0, 0,
-			0, 0, 0,
-			0, 0, 0
-	};
-
-	unsigned int indices[] = {
-			0, 1, 2, 0, 2, 3
-	};
-	manager->loadShaderProgram(std::string("textureShader"), std::string("textureShader"));
-	manager->loadMeshFromData(std::string("mesh"), data, indices, 4, 6, true);
-	manager->loadTexture("Button1_default");
-
-	testModel = Model(manager->getMesh("mesh"), manager->getShaderProgram(std::string("textureShader"), std::string("textureShader")), glm::vec3(0, 0, 0), 0, 0);
-	testModel.setTexture(manager->getTexture("Button1_default"));
-
-	testCamera.setPosition(0, 0, 10);
 }
 
 void Window::init() {
@@ -134,28 +104,33 @@ void Window::run() {
 }
 
 void Window::updateInput() {
-	ts::Keyboard::clearEvents();
-	ts::Mouse::clear();
+	Keyboard::clearEvents();
+	Mouse::clear();
+	Mouse::setLastMove(0, 0);
 	sf::Event event;
 	while (pollEvent(event)) {
 		if (event.type == sf::Event::Closed) {
 			stop();
 		} else if (event.type == sf::Event::KeyPressed) {
-			ts::Keyboard::setKey(event.key.code, true);
-			ts::Keyboard::setKeyEvent(event.key.code, ts::Keyboard::keyPressed);
+			Keyboard::setKey(event.key.code, true);
+			Keyboard::setKeyEvent(event.key.code, Keyboard::keyPressed);
 		} else if (event.type == sf::Event::KeyReleased) {
-			ts::Keyboard::setKey(event.key.code, false);
-			ts::Keyboard::setKeyEvent(event.key.code, ts::Keyboard::keyReleased);
+			Keyboard::setKey(event.key.code, false);
+			Keyboard::setKeyEvent(event.key.code, Keyboard::keyReleased);
 		} else if (event.type == sf::Event::MouseButtonPressed) {
-			ts::Mouse::setMouseButton(event.mouseButton.button, true);
-			ts::Mouse::setMouseButtonEvent(event.mouseButton.button, ts::Mouse::buttonPressed);
+			Mouse::setMouseButton(event.mouseButton.button, true);
+			Mouse::setMouseButtonEvent(event.mouseButton.button, Mouse::buttonPressed);
 		} else if (event.type == sf::Event::MouseButtonReleased) {
-			ts::Mouse::setMouseButton(event.mouseButton.button, false);
-			ts::Mouse::setMouseButtonEvent(event.mouseButton.button, ts::Mouse::buttonReleased);
+			Mouse::setMouseButton(event.mouseButton.button, false);
+			Mouse::setMouseButtonEvent(event.mouseButton.button, Mouse::buttonReleased);
 		} else if (event.type == sf::Event::MouseMoved) {
-			ts::Mouse::setPosition(event.mouseMove.x, event.mouseMove.y);
+			int dx = 0, dy = 0;
+			dx = (event.mouseMove.x - Mouse::getPosition().x);
+			dy = -(event.mouseMove.y - (height - Mouse::getPosition().y));
+			Mouse::setLastMove(dx, dy);
+			Mouse::setPosition(event.mouseMove.x, height - event.mouseMove.y);
 		} else if (event.type == sf::Event::MouseWheelMoved) {
-			ts::Mouse::setMouseWheelDelta(event.mouseWheel.delta);
+			Mouse::setMouseWheelDelta(event.mouseWheel.delta);
 		}
 	}
 }
@@ -185,8 +160,6 @@ void Window::render() {
 	if (currentScene != NULL) {
 		currentScene->draw();
 	}
-
-	testModel.draw(&testCamera);
 	display();
 }
 

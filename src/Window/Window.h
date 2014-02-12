@@ -12,9 +12,6 @@
 
 #include "../Common.h"
 
-#include "../Render/Model.h"
-#include "../Util/Camera.h"
-
 #include <glm/glm.hpp>
 
 namespace ts {
@@ -69,9 +66,6 @@ protected:
 	bool printFPS;
 
 	glm::mat4 projectionMatrix;
-
-	Model testModel;
-	Camera testCamera;
 };
 
 } /* namespace ts */

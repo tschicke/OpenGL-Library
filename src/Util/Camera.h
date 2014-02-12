@@ -22,6 +22,8 @@ public:
 	void rotate(int dx, int dy);
 	void move(glm::vec3 moveVector);
 	void move(float dx, float dy, float dz);
+	void moveInDirection(glm::vec3 moveVector);
+	void moveInDirection(float dx, float dy, float dz);
 
 	void setPosition(glm::vec3 newPosition);
 	void setPosition(int x, int y, int z);

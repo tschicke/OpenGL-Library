@@ -238,7 +238,7 @@ bool ResourceManager::loadTexture(std::string textureName) {
 	unsigned int offset = 0;
 
 	/*Load texture and mipmaps*/
-	for (unsigned int level = 0; level < 1 && (width || height); level++) {
+	for (unsigned int level = 0; level < mipmapCount && (width || height); level++) {
 		unsigned int size = MathHelper::max((width / 4), 1) * MathHelper::max((height / 4), 1) * block_size;
 		glCompressedTexImage2D(GL_TEXTURE_2D, level, format, width, height, 0, size, buffer + offset);
 
@@ -246,7 +246,13 @@ bool ResourceManager::loadTexture(std::string textureName) {
 		width /= 2;
 		height /= 2;
 	}
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
 	delete buffer;
+
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	textureMap.insert(std::pair<std::string, Texture *>(textureName, texture));
 
