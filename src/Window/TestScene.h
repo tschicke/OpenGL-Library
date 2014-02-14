@@ -26,9 +26,10 @@ public:
 	void update(time_t dt);
 	void draw();
 private:
+	float cameraSpeed;
 	Camera camera;
 	Model model;
-
+	Model plane;
 };
 
 } /* namespace ts */

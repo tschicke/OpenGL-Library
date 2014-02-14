@@ -48,7 +48,7 @@ void Window::create(int width, int height, int FOV, const char* title) {
 	this->width = width;
 	this->height = height;
 	this->FOV = FOV;
-	projectionMatrix = glm::perspective((float) FOV, (float) width / (float) height, 0.1f, 200.f);
+	projectionMatrix = glm::perspective((float) FOV, (float) width / (float) height, 0.1f, 2000.f);
 	running = false;
 	printFPS = true;
 	create(sf::VideoMode(width, height, 32), title);
@@ -76,6 +76,7 @@ void Window::setScene(Scene* newScene) {
 		return;
 	}
 	if (currentScene != NULL) {
+		currentScene->cleanUp();
 		delete currentScene;
 	}
 	currentScene = newScene;
@@ -182,7 +183,10 @@ glm::mat4* Window::getProjectionMatrix() {
 }
 
 void Window::cleanUp() {
-	delete currentScene;
+	if (currentScene != NULL) {
+		currentScene->cleanUp();
+		delete currentScene;
+	}
 
 	MathHelper::cleanup();
 }

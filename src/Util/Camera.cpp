@@ -29,6 +29,7 @@ void Camera::init(glm::vec3 position) {
 	pitch = 0;
 	this->position = position;
 	lookDir = glm::vec3(0, 0, -1);
+	upVector = glm::vec3(0, 1, 0);
 	viewMatrixNeedsUpdate = true;
 }
 
@@ -42,10 +43,14 @@ void Camera::move(float dx, float dy, float dz) {
 }
 
 void Camera::moveInDirection(glm::vec3 moveVector) {
-	float cameraDX = 0;
-	float cameraDY = 0;
-	float cameraDZ = 0;
-	//TODO finish this
+	float sinYaw = MathHelper::sin_float(MathHelper::toRadians(yaw));
+	float cosYaw = MathHelper::cos_float(MathHelper::toRadians(yaw));
+
+	float cameraDX = cosYaw * moveVector.x - sinYaw * moveVector.z;
+	float cameraDY = moveVector.y;
+	float cameraDZ = cosYaw * moveVector.z + sinYaw * moveVector.x;
+
+	move(cameraDX, cameraDY, cameraDZ);
 }
 
 void Camera::moveInDirection(float dx, float dy, float dz) {
@@ -57,8 +62,23 @@ void Camera::setPosition(glm::vec3 newPosition) {
 	viewMatrixNeedsUpdate = true;
 }
 
-void Camera::setPosition(int x, int y, int z) {
+void Camera::setPosition(float x, float y, float z) {
 	setPosition(glm::vec3(x, y, z));
+}
+
+void Camera::setX(float x){
+	this->position.x = x;
+	viewMatrixNeedsUpdate = true;
+}
+
+void Camera::setY(float y){
+	this->position.y = y;
+	viewMatrixNeedsUpdate = true;
+}
+
+void Camera::setZ(float z){
+	this->position.z = z;
+	viewMatrixNeedsUpdate = true;
 }
 
 glm::vec3 Camera::getPosition() {
@@ -85,9 +105,18 @@ void Camera::rotate(int dx, int dy) {
 	viewMatrixNeedsUpdate = true;
 }
 
+void Camera::lookAt(float x, float y, float z) {
+	lookAt(glm::vec3(x, y, z));
+}
+
+void Camera::lookAt(glm::vec3 position) {
+	lookDir = glm::normalize(position - this->position);
+	viewMatrixNeedsUpdate = true;
+}
+
 glm::mat4 * Camera::getViewMatrix() {
 	if (viewMatrixNeedsUpdate) {
-		viewMatrix = glm::lookAt(position, position + lookDir, glm::vec3(0, 1, 0));
+		viewMatrix = glm::lookAt(position, position + lookDir, upVector);
 		viewMatrixNeedsUpdate = false;
 	}
 	return &viewMatrix;

@@ -16,20 +16,21 @@
 namespace ts {
 
 Model::Model() {
-	init(NULL/*default mesh*/, NULL/*defaultShader*/, glm::vec3(0, 0, 0), 0, 0);
+	init(NULL/*default mesh*/, NULL/*defaultShader*/, NULL/*defaultTexture*/, glm::vec3(0, 0, 0), 0, 0);
 }
 
-Model::Model(Mesh* mesh, ShaderProgram* shaderProgram) {
-	init(mesh, shaderProgram, glm::vec3(0, 0, 0), 0, 0);
+Model::Model(Mesh* mesh, ShaderProgram* shaderProgram, Texture * texture) {
+	init(mesh, shaderProgram, texture, glm::vec3(0, 0, 0), 0, 0);
 }
 
-Model::Model(Mesh* mesh, ShaderProgram* shaderProgram, glm::vec3 position, float yaw, float pitch) {
-	init(mesh, shaderProgram, position, yaw, pitch);
+Model::Model(Mesh* mesh, ShaderProgram* shaderProgram, Texture * texture, glm::vec3 position, float yaw, float pitch) {
+	init(mesh, shaderProgram, texture, position, yaw, pitch);
 }
 
-void Model::init(Mesh * mesh, ShaderProgram * shaderProgram, glm::vec3 position, float yaw, float pitch) {
+void Model::init(Mesh * mesh, ShaderProgram * shaderProgram, Texture * texture, glm::vec3 position, float yaw, float pitch) {
 	this->mesh = mesh;
 	this->shaderProgram = shaderProgram;
+	this->texture = texture;
 	this->position = position;
 	this->yaw = yaw;
 	this->pitch = pitch;

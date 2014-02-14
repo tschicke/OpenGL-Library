@@ -19,8 +19,8 @@ namespace ts {
 class Model {
 public:
 	Model();
-	Model(Mesh * mesh, ShaderProgram * shaderProgram);
-	Model(Mesh * mesh, ShaderProgram * shaderProgram, glm::vec3 position, float yaw, float pitch);
+	Model(Mesh * mesh, ShaderProgram * shaderProgram, Texture * texture);
+	Model(Mesh * mesh, ShaderProgram * shaderProgram, Texture * texture, glm::vec3 position, float yaw, float pitch);
 	virtual ~Model();
 
 	void translate(float x, float y, float z);
@@ -53,7 +53,7 @@ private:
 	glm::vec3 position;
 	int yaw, pitch;
 
-	void init(Mesh * mesh, ShaderProgram * shaderProgram, glm::vec3 position, float yaw, float pitch);
+	void init(Mesh * mesh, ShaderProgram * shaderProgram, Texture * texture, glm::vec3 position, float yaw, float pitch);
 };
 
 } /* namespace ts */

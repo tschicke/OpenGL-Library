@@ -7,6 +7,10 @@
 
 #include "TestScene.h"
 
+#include "Window.h"
+
+#include "../Util/MathHelper.h"
+
 #include <iostream>
 
 #include "../Render/ResourceManager.h"
@@ -16,40 +20,63 @@ namespace ts {
 TestScene::TestScene() {
 	camera.setPosition(0, 0, 2);
 
-	float vertexData[] = { 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0,
+	float vertexData1[] = {
+			0, 0, 0,
+			1000, 0, 0,
+			1000, 0, 1000,
+			0, 0, 1000,
 
-	0, 0, 1, 0, 1, 1, 0, 1,
+			0, 0,
+			500, 0,
+			500, 500,
+			0, 500,
 
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
+			0, 0, 0,
+			0, 0, 0,
+			0, 0, 0,
+			0, 0, 0,
+	};
 
-	unsigned int indices[] = { 0, 1, 2, 0, 2, 3 };
+	unsigned int indices1[] = { 0, 1, 2, 0, 2, 3 };
 
 	ResourceManager * manager = ResourceManager::getResourceManger();
 
-	manager->loadMeshFromData("Square", vertexData, indices, 4, 6, true);
+	manager->loadMeshFromData("Square", vertexData1, indices1, 4, 6, true);
 	manager->loadShaderProgram("textureShader", "textureShader");
 	manager->loadTexture("Button1_default");
 
-	model = Model(manager->getMesh("Square"), manager->getShaderProgram("textureShader", "textureShader"));
-	model.setTexture(manager->getTexture("Button1_default"));
+	model = Model(manager->getMesh("Square"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("Button1_default"));
+	model.translate(-500, 0, -500);
+
+	cameraSpeed = 0;
+	camera.setPosition(camera.getPosition() + glm::vec3(0, 50, 0));
+
 }
 
 TestScene::~TestScene() {
 }
 
 void TestScene::update(time_t dt) {
-	float scale = 60.f * dt / 1000000.f;
+	if(Keyboard::checkKeyEvent(Keyboard::Escape) == Keyboard::keyPressed){
+		Window::getMainWindow()->stop();
+		return;
+	}
+	float secondScale = dt / 1000000.f;
+	float fpsScale = 60.f * dt / 1000000.f;
 
-//	model.rotateYaw(1);
-	model.rotatePitch(1);
-
-	float cameraDZ = 0, cameraDX = 0;
-	float moveSpeed = 6.f / 60.f;
+	float cameraDZ = 0, cameraDY = 0, cameraDX = 0;
+	float moveSpeed = 6.f;
 	if (Keyboard::isKeyPressed(Keyboard::W)) {
 		cameraDZ += -1;
 	}
 	if (Keyboard::isKeyPressed(Keyboard::S)) {
 		cameraDZ += 1;
+	}
+	if (Keyboard::isKeyPressed(Keyboard::Q)) {
+		cameraDY += -1;
+	}
+	if (Keyboard::isKeyPressed(Keyboard::E)) {
+		cameraDY += 1;
 	}
 	if (Keyboard::isKeyPressed(Keyboard::A)) {
 		cameraDX += -1;
@@ -57,16 +84,28 @@ void TestScene::update(time_t dt) {
 	if (Keyboard::isKeyPressed(Keyboard::D)) {
 		cameraDX += 1;
 	}
-	cameraDX *= moveSpeed * scale;
-	cameraDZ *= moveSpeed * scale;
+	bool skip = false;
+	if(Keyboard::checkKeyEvent(Keyboard::Space) == Keyboard::keyPressed){
+		cameraSpeed += 5;
+		skip = true;
+	}
+	cameraDX *= moveSpeed * secondScale;
+	cameraDY *= moveSpeed * secondScale;
+	cameraDZ *= moveSpeed * secondScale;
+
+	cameraSpeed -= 9.8f * secondScale;
+	if(camera.getPosition().y + cameraDY - 6 < 0 && !skip){
+//		camera.setY(50);
+		cameraSpeed = 0;
+	}
+
+	cameraDY += cameraSpeed;
 
 	float lookSpeed = 1.f;
-	float mouseDX = Mouse::getLastMove().x * lookSpeed * scale;
-	float mouseDY = Mouse::getLastMove().y * lookSpeed * scale;
+	float mouseDX = Mouse::getLastMove().x * lookSpeed * fpsScale;
+	float mouseDY = Mouse::getLastMove().y * lookSpeed * fpsScale;
 
-	std::cout << Mouse::getLastMove().x << ' ' << Mouse::getLastMove().y << '\n';
-
-	camera.move(cameraDX, 0, cameraDZ);
+	camera.moveInDirection(cameraDX, cameraDY, cameraDZ);
 	camera.rotate(mouseDX, mouseDY);
 }
 

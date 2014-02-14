@@ -20,13 +20,18 @@ public:
 	virtual ~Camera();
 
 	void rotate(int dx, int dy);
+	void lookAt(float x, float y, float z);
+	void lookAt(glm::vec3 position);
 	void move(glm::vec3 moveVector);
 	void move(float dx, float dy, float dz);
 	void moveInDirection(glm::vec3 moveVector);
 	void moveInDirection(float dx, float dy, float dz);
 
 	void setPosition(glm::vec3 newPosition);
-	void setPosition(int x, int y, int z);
+	void setPosition(float x, float y, float z);
+	void setX(float x);
+	void setY(float y);
+	void setZ(float z);
 
 	glm::vec3 getPosition();
 	glm::vec3 getDirection();
@@ -34,6 +39,7 @@ public:
 private:
 	glm::vec3 position;
 	glm::vec3 lookDir;
+	glm::vec3 upVector;
 	glm::mat4 viewMatrix;
 
 	int yaw, pitch;
