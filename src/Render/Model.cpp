@@ -107,7 +107,7 @@ void Model::setTexture(Texture* texture) {
 }
 
 void Model::draw(Camera* camera) {
-	if(mesh == NULL || shaderProgram == NULL || texture == NULL){
+	if(mesh == NULL || shaderProgram == NULL){
 		return;
 	}
 	if(modelMatrixNeedsUpdate){

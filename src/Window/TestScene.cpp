@@ -22,9 +22,9 @@ TestScene::TestScene() {
 
 	float vertexData1[] = {
 			0, 0, 0,
-			1000, 0, 0,
-			1000, 0, 1000,
 			0, 0, 1000,
+			1000, 0, 1000,
+			1000, 0, 0,
 
 			0, 0,
 			500, 0,
@@ -42,11 +42,14 @@ TestScene::TestScene() {
 	ResourceManager * manager = ResourceManager::getResourceManger();
 
 	manager->loadMeshFromData("Square", vertexData1, indices1, 4, 6, true);
+	manager->loadMeshFromFile("Monkey");
 	manager->loadShaderProgram("textureShader", "textureShader");
-	manager->loadTexture("Button1_default");
+	manager->loadTexture("BlockSheet");
 
-	model = Model(manager->getMesh("Square"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("Button1_default"));
-	model.translate(-500, 0, -500);
+	model = Model(manager->getMesh("Monkey"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("BlockSheet"));
+	model.translate(0, 2, 0);
+	plane = Model(manager->getMesh("Square"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("Button1_default"));
+	plane.translate(-500, 0, -500);
 
 	cameraSpeed = 0;
 	camera.setPosition(camera.getPosition() + glm::vec3(0, 50, 0));
@@ -111,6 +114,7 @@ void TestScene::update(time_t dt) {
 
 void TestScene::draw() {
 	model.draw(&camera);
+	plane.draw(&camera);
 }
 
 } /* namespace ts */

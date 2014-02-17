@@ -12,6 +12,11 @@
 #include <iostream>
 #include <fstream>
 
+#include <string>
+#include <string.h>
+#include <sstream>
+#include <vector>
+
 #include <gl/glew.h>
 #include <gl/gl.h>
 
@@ -30,13 +35,86 @@ ResourceManager::~ResourceManager() {
 }
 
 bool ResourceManager::loadMeshFromFile(std::string meshName) {
-	return false;
+	if (meshMap.find(meshName) != meshMap.end()) {
+		std::cerr << "Error loading mesh: " << meshName << " - mesh with name " << meshName << " is already loaded" << std::endl;
+		return true;
+	}
+
+	std::ifstream meshFile;
+	meshFile.open((meshName + ".model").c_str());
+
+	if (!meshFile.is_open()) {
+		std::cerr << "Error loading mesh: " << meshName << " - could not open file " << meshName << ".model" << std::endl;
+		meshFile.close();
+		return false;
+	}
+
+	std::string header;
+	getline(meshFile, header);
+	if (header.compare("gmdl") != 0) {
+		std::cerr << "Error loading mesh: " << meshName << " - file has incorrect header" << std::endl;
+		meshFile.close();
+		return false;
+	}
+
+	unsigned int numVertices, numIndices;
+	std::string nums;
+	getline(meshFile, nums);
+	std::stringstream stream(nums);
+	stream >> numVertices >> numIndices;
+	std::vector<float> vertexData;
+	vertexData.reserve(numVertices * 8); //Times number of floats per vertex
+	std::vector<unsigned int> indexData;
+	indexData.reserve(numIndices);
+
+	std::string line;
+	while (getline(meshFile, line)) {
+		std::string prefix = line.substr(0, 1);
+		if (prefix == "v") {
+			std::stringstream stream(line.substr(1));
+			float x, y, z;
+			stream >> x >> y >> z;
+			vertexData.push_back(x);
+			vertexData.push_back(y);
+			vertexData.push_back(z);
+		} else if (prefix == "t") {
+			std::stringstream stream(line.substr(1));
+			float u, v;
+			stream >> u >> v;
+			vertexData.push_back(u);
+			vertexData.push_back(v);
+		} else if (prefix == "n") {
+			std::stringstream stream(line.substr(1));
+			float x, y, z;
+			stream >> x >> y >> z;
+			vertexData.push_back(x);
+			vertexData.push_back(y);
+			vertexData.push_back(z);
+		} else if (prefix == "i") {
+			std::stringstream stream(line.substr(1));
+			unsigned int i1, i2, i3;
+			stream >> i1 >> i2 >> i3;
+			indexData.push_back(i1);
+			indexData.push_back(i2);
+			indexData.push_back(i3);
+		}
+	}
+
+	meshFile.close();
+
+	for(unsigned int i = 0; i < numIndices; i++){
+		std::cout << indexData[i] << '\n';
+	}
+
+	bool loaded = loadMeshFromData(meshName, vertexData.data(), indexData.data(), numVertices, numIndices, true);
+
+	return loaded;
 }
 
 bool ResourceManager::loadMeshFromData(std::string meshName, float* vertexData, unsigned int* indexData, int numVertices, int numIndices, bool textured) {
 	if (meshMap.find(meshName) != meshMap.end()) {
-		std::cerr << "Error loading mesh: " << meshName << " - " << meshName << " is already loaded" << std::endl;
-		return false;
+		std::cerr << "Error loading mesh: " << meshName << " - mesh with name " << meshName << " is already loaded" << std::endl;
+		return true;
 	}
 	if (vertexData == NULL || indexData == NULL) {
 		std::cerr << "Error loading mesh: " << meshName << " - vertexData or indexData is NULL" << std::endl;
@@ -180,7 +258,7 @@ bool ResourceManager::loadShaderProgram(std::string vertexShaderName, std::strin
 bool ResourceManager::loadTexture(std::string textureName) {
 	if (textureMap.find(textureName) != textureMap.end()) {
 		std::cerr << "Error loading texture: " << textureName << " - " << textureName << " is already loaded" << std::endl;
-		return false;
+		return true;
 	}
 
 	Texture * texture = new Texture;

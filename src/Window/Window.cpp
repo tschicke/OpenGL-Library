@@ -165,13 +165,15 @@ void Window::render() {
 }
 
 void Window::initGL() {
-	glEnable(GL_DEPTH_TEST);
-
 	glewExperimental = GL_TRUE;
 	if (glewInit() != GLEW_OK) {
 		std::cerr << "Glew not initialized properly\n";
 		exit(EXIT_FAILURE);
 	}
+
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 }
 
 void Window::setFOV(int FOV) {
