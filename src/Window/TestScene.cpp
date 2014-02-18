@@ -46,10 +46,12 @@ TestScene::TestScene() {
 	manager->loadShaderProgram("textureShader", "textureShader");
 	manager->loadTexture("BlockSheet");
 
-	model = Model(manager->getMesh("Monkey"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("BlockSheet"));
+	model = Model(manager->getMesh("Sphere"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("MonkeyFaceTexture"));
 	model.translate(0, 2, 0);
-	plane = Model(manager->getMesh("Square"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("Button1_default"));
-	plane.translate(-500, 0, -500);
+	model2 = Model(manager->getMesh("Sphere2"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("MonkeyFaceTexture"));
+	model2.translate(3, 2, 0);
+	plane = Model(manager->getMesh("Terrain"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("Button1_default"));
+//	plane.translate(-500, 0, -500);
 
 	cameraSpeed = 0;
 	camera.setPosition(camera.getPosition() + glm::vec3(0, 50, 0));
@@ -64,8 +66,8 @@ void TestScene::update(time_t dt) {
 		Window::getMainWindow()->stop();
 		return;
 	}
-	float secondScale = dt / 1000000.f;
-	float fpsScale = 60.f * dt / 1000000.f;
+	double secondScale = dt / 1000000.f;
+	double fpsScale = 60.f * dt / 1000000.f;
 
 	float cameraDZ = 0, cameraDY = 0, cameraDX = 0;
 	float moveSpeed = 6.f;
@@ -105,8 +107,8 @@ void TestScene::update(time_t dt) {
 	cameraDY += cameraSpeed;
 
 	float lookSpeed = 1.f;
-	float mouseDX = Mouse::getLastMove().x * lookSpeed * fpsScale;
-	float mouseDY = Mouse::getLastMove().y * lookSpeed * fpsScale;
+	float mouseDX = Mouse::getLastMove().x * lookSpeed;
+	float mouseDY = Mouse::getLastMove().y * lookSpeed;
 
 	camera.moveInDirection(cameraDX, cameraDY, cameraDZ);
 	camera.rotate(mouseDX, mouseDY);
@@ -114,6 +116,7 @@ void TestScene::update(time_t dt) {
 
 void TestScene::draw() {
 	model.draw(&camera);
+	model2.draw(&camera);
 	plane.draw(&camera);
 }
 

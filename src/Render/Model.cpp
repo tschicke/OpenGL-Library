@@ -123,9 +123,11 @@ void Model::draw(Camera* camera) {
 	glm::mat4 projectionMatrix = *(ts::Window::getMainWindow()->getProjectionMatrix());
 
 	glm::mat4 MVPMatrix = projectionMatrix * viewMatrix * modelMatrix;
+	glm::mat4 NormalMatrix = glm::transpose(glm::inverse(modelMatrix));
 
 	shaderProgram->useShaderProgram();
 	shaderProgram->setUniform("MVPMatrix", &MVPMatrix);
+	shaderProgram->setUniform("NormalMatrix", &NormalMatrix);
 //	shaderProgram->setUniform("modelMatrix", &modelMatrix);
 //	shaderProgram->setUniform("viewMatrix", &viewMatrix);
 //	shaderProgram->setUniform("projectionMatrix", &projectionMatrix);

@@ -102,10 +102,6 @@ bool ResourceManager::loadMeshFromFile(std::string meshName) {
 
 	meshFile.close();
 
-	for(unsigned int i = 0; i < numIndices; i++){
-		std::cout << indexData[i] << '\n';
-	}
-
 	bool loaded = loadMeshFromData(meshName, vertexData.data(), indexData.data(), numVertices, numIndices, true);
 
 	return loaded;

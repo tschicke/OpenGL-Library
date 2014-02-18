@@ -28,7 +28,7 @@ public:
 private:
 	float cameraSpeed;
 	Camera camera;
-	Model model;
+	Model model, model2;
 	Model plane;
 };
 
