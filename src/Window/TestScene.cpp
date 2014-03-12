@@ -46,9 +46,9 @@ TestScene::TestScene() {
 	manager->loadShaderProgram("textureShader", "textureShader");
 	manager->loadTexture("BlockSheet");
 
-	model = Model(manager->getMesh("Sphere"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("MonkeyFaceTexture"));
+	model = Model(manager->getMesh("Sphere3"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("MonkeyFaceTexture"));
 	model.translate(0, 2, 0);
-	model2 = Model(manager->getMesh("Sphere2"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("MonkeyFaceTexture"));
+	model2 = Model(manager->getMesh("Sword2"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("MonkeyFaceTexture"));
 	model2.translate(3, 2, 0);
 	plane = Model(manager->getMesh("Terrain"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("Button1_default"));
 //	plane.translate(-500, 0, -500);
@@ -99,7 +99,7 @@ void TestScene::update(time_t dt) {
 	cameraDZ *= moveSpeed * secondScale;
 
 	cameraSpeed -= 9.8f * secondScale;
-	if(camera.getPosition().y + cameraDY - 6 < 0 && !skip){
+	if(camera.getPosition().y + cameraDY - 8 < 0 && !skip){
 //		camera.setY(50);
 		cameraSpeed = 0;
 	}

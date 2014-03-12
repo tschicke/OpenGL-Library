@@ -36,6 +36,16 @@ public:
 	int getYaw();
 	int getPitch();
 
+	void scaleX(float scaleFactor);
+	void scaleY(float scaleFactor);
+	void scaleZ(float scaleFactor);
+	void scale(glm::vec3 scaleVector);
+	void setScaleX(float scaleX);
+	void setScaleY(float scaleY);
+	void setScaleZ(float scaleZ);
+	void setScale(glm::vec3 scaleVector);
+	glm::vec3 getScaleVector();
+
 	void setMesh(Mesh * mesh);
 	void setShader(ShaderProgram * shaderProgram);
 	void setTexture(Texture * texture);
@@ -51,6 +61,7 @@ private:
 	bool modelMatrixNeedsUpdate;
 
 	glm::vec3 position;
+	glm::vec3 scaleVector;
 	int yaw, pitch;
 
 	void init(Mesh * mesh, ShaderProgram * shaderProgram, Texture * texture, glm::vec3 position, float yaw, float pitch);

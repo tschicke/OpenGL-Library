@@ -20,8 +20,6 @@ public:
 
 	void render();
 
-	void deleteMesh();
-
 	friend class ResourceManager;
 protected:
 	unsigned int vertexID, indexID;

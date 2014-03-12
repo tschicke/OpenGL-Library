@@ -32,6 +32,7 @@ void Model::init(Mesh * mesh, ShaderProgram * shaderProgram, Texture * texture, 
 	this->shaderProgram = shaderProgram;
 	this->texture = texture;
 	this->position = position;
+	this->scaleVector = glm::vec3(1, 1, 1);
 	this->yaw = yaw;
 	this->pitch = pitch;
 	modelMatrixNeedsUpdate = true;
@@ -60,6 +61,50 @@ void Model::setPosition(glm::vec3 position) {
 
 glm::vec3 Model::getPosition() {
 	return position;
+}
+
+void Model::scaleX(float scaleFactor) {
+	scaleVector.x *= scaleFactor;
+	modelMatrixNeedsUpdate = true;
+}
+
+void Model::scaleY(float scaleFactor) {
+	scaleVector.y *= scaleFactor;
+	modelMatrixNeedsUpdate = true;
+}
+
+void Model::scaleZ(float scaleFactor) {
+	scaleVector.z *= scaleFactor;
+	modelMatrixNeedsUpdate = true;
+}
+
+void Model::scale(glm::vec3 scaleVector){
+	this->scaleVector *= scaleVector;
+	modelMatrixNeedsUpdate = true;
+}
+
+void Model::setScaleX(float scaleX) {
+	scaleVector.x = scaleX;
+	modelMatrixNeedsUpdate = true;
+}
+
+void Model::setScaleY(float scaleY) {
+	scaleVector.y = scaleY;
+	modelMatrixNeedsUpdate = true;
+}
+
+void Model::setScaleZ(float scaleZ) {
+	scaleVector.z = scaleZ;
+	modelMatrixNeedsUpdate = true;
+}
+
+void Model::setScale(glm::vec3 scaleVector){
+	this->scaleVector = scaleVector;
+	modelMatrixNeedsUpdate = true;
+}
+
+glm::vec3 Model::getScaleVector() {
+	return scaleVector;
 }
 
 void Model::rotateYaw(int deltaYaw) {
@@ -111,7 +156,7 @@ void Model::draw(Camera* camera) {
 		return;
 	}
 	if(modelMatrixNeedsUpdate){
-		modelMatrix = glm::translate(position) * glm::rotate((float) yaw, 0.f, 1.f, 0.f) * glm::rotate((float) pitch, 1.f, 0.f, 0.f);
+		modelMatrix = glm::translate(position) * glm::rotate((float) yaw, 0.f, 1.f, 0.f) * glm::rotate((float) pitch, 1.f, 0.f, 0.f) * glm::scale(scaleVector);
 		modelMatrixNeedsUpdate = false;
 	}
 

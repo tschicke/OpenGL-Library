@@ -48,7 +48,7 @@ void Mesh::render() {
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexID);
 
-	glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, (void *) 0);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 

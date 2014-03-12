@@ -41,7 +41,7 @@ bool ResourceManager::loadMeshFromFile(std::string meshName) {
 	}
 
 	std::ifstream meshFile;
-	meshFile.open((meshName + ".model").c_str());
+	meshFile.open(("models/" + meshName + ".model").c_str());
 
 	if (!meshFile.is_open()) {
 		std::cerr << "Error loading mesh: " << meshName << " - could not open file " << meshName << ".model" << std::endl;
@@ -160,7 +160,7 @@ bool ResourceManager::loadShaderProgram(std::string vertexShaderName, std::strin
 
 	//Load Vertex Shader
 	std::string vertexShaderCode;
-	std::ifstream vertexShaderStream((vertexShaderName + ".vert").c_str(), std::ios::in);
+	std::ifstream vertexShaderStream(("shaders/" + vertexShaderName + ".vert").c_str(), std::ios::in);
 	if (vertexShaderStream.is_open()) {
 		std::string line = "";
 		while (getline(vertexShaderStream, line)) {
@@ -194,7 +194,7 @@ bool ResourceManager::loadShaderProgram(std::string vertexShaderName, std::strin
 
 	//Load Fragment Shader
 	std::string fragmentShaderCode;
-	std::ifstream fragmentShaderStream((fragmentShaderName + ".frag").c_str(), std::ios::in);
+	std::ifstream fragmentShaderStream(("shaders/" + fragmentShaderName + ".frag").c_str(), std::ios::in);
 	if (fragmentShaderStream.is_open()) {
 		std::string line = "";
 		while (getline(fragmentShaderStream, line)) {
@@ -259,7 +259,7 @@ bool ResourceManager::loadTexture(std::string textureName) {
 
 	Texture * texture = new Texture;
 
-	std::ifstream file((textureName + ".DDS").c_str());
+	std::ifstream file(("res/" + textureName + ".DDS").c_str());
 	if (!file.is_open()) {
 		std::cerr << "Error loading texture: " << textureName << " - invalid file name" << std::endl;
 		return false;
@@ -333,6 +333,65 @@ bool ResourceManager::loadTexture(std::string textureName) {
 	return true;
 }
 
+bool ResourceManager::modifyMeshVertexData(std::string meshName, float * vertexData, int numElements, int offset) {
+	std::map<std::string, Mesh *>::iterator location = meshMap.find(meshName);
+	if (location == meshMap.end()) {
+		std::cout << "Error modifying mesh " << meshName << ": mesh is not loaded and cannot be modified" << std::endl;
+		return false;
+	}
+	Mesh * mesh = location->second;
+
+	int meshVertexSize = 3;
+	int meshTextureSize = (mesh->textured ? 2 : 3);
+	int meshNormalSize = 3;
+	if (offset + numElements > mesh->numVertices * (meshVertexSize + meshTextureSize + meshNormalSize)) {
+		std::cout << "Error modifying mesh " << meshName << ": numElements or offset is too large" << std::endl;
+		return false;
+	}
+	if (vertexData == NULL) {
+		std::cout << "Error modifying mesh " << meshName << ": vertexData is null" << std::endl;
+	}
+	if (numElements == 0) {
+		return false;
+	}
+
+	unsigned int vertexID = mesh->vertexID;
+
+	glBindBuffer(GL_ARRAY_BUFFER, vertexID);
+	glBufferSubData(GL_ARRAY_BUFFER, offset, numElements, vertexData);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	return true;
+}
+
+bool ResourceManager::modifyMeshIndexData(std::string meshName, unsigned int * indexData, int numIndices, int offset) {
+	std::map<std::string, Mesh *>::iterator location = meshMap.find(meshName);
+	if (location == meshMap.end()) {
+		std::cout << "Error modifying mesh " << meshName << ": mesh is not loaded and cannot be modified" << std::endl;
+		return false;
+	}
+	Mesh * mesh = location->second;
+
+	if (offset + numIndices > mesh->numIndices) {
+		std::cout << "Error modifying mesh " << meshName << ": numElements or offset is too large" << std::endl;
+		return false;
+	}
+	if (indexData == NULL) {
+		std::cout << "Error modifying mesh " << meshName << ": vertexData is null" << std::endl;
+	}
+	if (numIndices == 0) {
+		return false;
+	}
+
+	unsigned int indexID = mesh->indexID;
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexID);
+	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, numIndices, indexData);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	return true;
+}
+
 Mesh * ResourceManager::getMesh(std::string meshName) {
 	if (meshMap.find(meshName) == meshMap.end()) { //Does not contain
 		bool load = loadMeshFromFile(meshName);
@@ -364,16 +423,37 @@ Texture * ResourceManager::getTexture(std::string textureName) {
 }
 
 void ResourceManager::deleteMesh(std::string meshName) {
+	std::map<std::string, Mesh *>::iterator location = meshMap.find(meshName);
+	if (location == meshMap.end()) {
+		std::cout << "Error deleting mesh " << meshName << ": mesh not loaded" << std::endl;
+		return;
+	}
+	Mesh * mesh = location->second;
+	glDeleteBuffers(1, &(mesh->vertexID));
+	glDeleteBuffers(1, &(mesh->indexID));
+	meshMap.erase(meshName);
+	delete mesh;
 }
 
 void ResourceManager::deleteShaderProgram(std::string shaderProgramName) {
+	std::map<std::string, ShaderProgram *>::iterator location = shaderProgramMap.find(shaderProgramName);
+	if (location == shaderProgramMap.end()) {
+		std::cout << "Error deleting shader program " << shaderProgramName << ": shader program not loaded" << std::endl;
+		return;
+	}
+	ShaderProgram * shaderProgram = location->second;
+	glDeleteProgram(shaderProgram->shaderProgramID);
+	shaderProgramMap.erase(shaderProgramName);
+	delete shaderProgram;
 }
 
 void ResourceManager::deleteTexture(std::string textureName) {
-	if (textureMap.find(textureName) == textureMap.end()) {
+	std::map<std::string, Texture *>::iterator location = textureMap.find(textureName);
+	if (location == textureMap.end()) {
+		std::cout << "Error deleting texture " << textureName << ": texture not loaded" << std::endl;
 		return;
 	}
-	Texture * texture = textureMap.at(textureName);
+	Texture * texture = location->second;
 	glDeleteTextures(1, &(texture->textureID));
 	textureMap.erase(textureName);
 	delete texture;

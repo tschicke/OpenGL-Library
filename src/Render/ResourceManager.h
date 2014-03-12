@@ -26,6 +26,9 @@ public:
 	bool loadShaderProgram(std::string vertexShaderName, std::string fragmentShaderName);
 	bool loadTexture(std::string textureName);
 
+	bool modifyMeshVertexData(std::string meshName, float * vertexData, int numElements, int offset);
+	bool modifyMeshIndexData(std::string meshName, unsigned int * indexData, int numIndices, int offset);
+
 	Mesh * getMesh(std::string meshName);
 	ShaderProgram * getShaderProgram(std::string vertexShaderName, std::string fragmentShaderName);
 	Texture * getTexture(std::string textureName);
