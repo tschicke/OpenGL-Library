@@ -358,7 +358,7 @@ bool ResourceManager::modifyMeshVertexData(std::string meshName, float * vertexD
 	unsigned int vertexID = mesh->vertexID;
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertexID);
-	glBufferSubData(GL_ARRAY_BUFFER, offset, numElements, vertexData);
+	glBufferSubData(GL_ARRAY_BUFFER, offset * sizeof(float), numElements * sizeof(float), vertexData);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	return true;
@@ -386,7 +386,7 @@ bool ResourceManager::modifyMeshIndexData(std::string meshName, unsigned int * i
 	unsigned int indexID = mesh->indexID;
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexID);
-	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, numIndices, indexData);
+	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset * sizeof(unsigned int), numIndices * sizeof(unsigned int), indexData);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	return true;
