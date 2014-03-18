@@ -333,7 +333,7 @@ bool ResourceManager::loadTexture(std::string textureName) {
 	return true;
 }
 
-bool ResourceManager::modifyMeshVertexData(std::string meshName, float * vertexData, int numElements, int offset) {
+bool ResourceManager::modifyMeshVertexData(std::string meshName, float * vertexData, int numVertices, int vertexOffset) {
 	std::map<std::string, Mesh *>::iterator location = meshMap.find(meshName);
 	if (location == meshMap.end()) {
 		std::cout << "Error modifying mesh " << meshName << ": mesh is not loaded and cannot be modified" << std::endl;
@@ -341,24 +341,80 @@ bool ResourceManager::modifyMeshVertexData(std::string meshName, float * vertexD
 	}
 	Mesh * mesh = location->second;
 
-	int meshVertexSize = 3;
-	int meshTextureSize = (mesh->textured ? 2 : 3);
-	int meshNormalSize = 3;
-	if (offset + numElements > mesh->numVertices * (meshVertexSize + meshTextureSize + meshNormalSize)) {
-		std::cout << "Error modifying mesh " << meshName << ": numElements or offset is too large" << std::endl;
+	if (vertexOffset + numVertices > mesh->numVertices) {
+		std::cout << "Error modifying mesh " << meshName << ": numVertices or vertexOffset is too large" << std::endl;
 		return false;
 	}
 	if (vertexData == NULL) {
 		std::cout << "Error modifying mesh " << meshName << ": vertexData is null" << std::endl;
+		return false;
 	}
-	if (numElements == 0) {
+	if (numVertices == 0) {
 		return false;
 	}
 
 	unsigned int vertexID = mesh->vertexID;
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertexID);
-	glBufferSubData(GL_ARRAY_BUFFER, offset * sizeof(float), numElements * sizeof(float), vertexData);
+	glBufferSubData(GL_ARRAY_BUFFER, vertexOffset * 3 * sizeof(float), numVertices * 3 * sizeof(float), vertexData);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	return true;
+}
+
+bool ResourceManager::modifyMeshTextureData(std::string meshName, float * textureData, int numUVs, int textureOffset) {
+	std::map<std::string, Mesh *>::iterator location = meshMap.find(meshName);
+	if (location == meshMap.end()) {
+		std::cout << "Error modifying mesh " << meshName << ": mesh is not loaded and cannot be modified" << std::endl;
+		return false;
+	}
+	Mesh * mesh = location->second;
+
+	if (textureOffset + numUVs> mesh->numVertices) {
+		std::cout << "Error modifying mesh " << meshName << ": numVertices or vertexOffset is too large" << std::endl;
+		return false;
+	}
+	if (textureData == NULL) {
+		std::cout << "Error modifying mesh " << meshName << ": vertexData is null" << std::endl;
+		return false;
+	}
+	if (numUVs == 0) {
+		return false;
+	}
+
+	unsigned int vertexID = mesh->vertexID;
+
+	glBindBuffer(GL_ARRAY_BUFFER, vertexID);
+	glBufferSubData(GL_ARRAY_BUFFER, ((textureOffset * 2) + (mesh->numVertices * 3)) * sizeof(float), numUVs * 2 * sizeof(float), textureData);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	return true;
+}
+
+bool ResourceManager::modifyMeshNormalData(std::string meshName, float * normalData, int numNormals, int normalOffset) {
+	std::map<std::string, Mesh *>::iterator location = meshMap.find(meshName);
+	if (location == meshMap.end()) {
+		std::cout << "Error modifying mesh " << meshName << ": mesh is not loaded and cannot be modified" << std::endl;
+		return false;
+	}
+	Mesh * mesh = location->second;
+
+	if (normalOffset + numNormals> mesh->numVertices) {
+		std::cout << "Error modifying mesh " << meshName << ": numVertices or vertexOffset is too large" << std::endl;
+		return false;
+	}
+	if (normalData == NULL) {
+		std::cout << "Error modifying mesh " << meshName << ": vertexData is null" << std::endl;
+		return false;
+	}
+	if (numNormals == 0) {
+		return false;
+	}
+
+	unsigned int vertexID = mesh->vertexID;
+
+	glBindBuffer(GL_ARRAY_BUFFER, vertexID);
+	glBufferSubData(GL_ARRAY_BUFFER, ((normalOffset * 3) + (mesh->numVertices * (3 + (mesh->textured ? 2 : 3)))) * sizeof(float), numNormals * 3 * sizeof(float), normalData);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	return true;

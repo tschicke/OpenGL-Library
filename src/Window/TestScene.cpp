@@ -22,19 +22,19 @@ TestScene::TestScene() {
 
 	float vertexData1[] = {
 			0, 0, 0,
-			0, 0, 1000,
-			1000, 0, 1000,
-			1000, 0, 0,
+			0, 0, 100,
+			100, 0, 100,
+			100, 0, 0,
 
 			0, 0,
-			500, 0,
-			500, 500,
-			0, 500,
+			5, 0,
+			5, 5,
+			0, 5,
 
-			0, 0, 0,
-			0, 0, 0,
-			0, 0, 0,
-			0, 0, 0,
+			0, 1, 0,
+			0, 1, 0,
+			0, 1, 0,
+			0, 1, 0,
 	};
 
 	unsigned int indices1[] = { 0, 1, 2, 0, 2, 3 };
@@ -46,7 +46,7 @@ TestScene::TestScene() {
 	manager->loadShaderProgram("textureShader", "textureShader");
 	manager->loadTexture("BlockSheet");
 
-	model = Model(manager->getMesh("Sphere3"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("MonkeyFaceTexture"));
+	model = Model(manager->getMesh("Square"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("MonkeyFaceTexture"));
 	model.translate(0, 2, 0);
 	model2 = Model(manager->getMesh("Sword2"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("MonkeyFaceTexture"));
 	model2.translate(3, 2, 0);
@@ -55,14 +55,13 @@ TestScene::TestScene() {
 
 	cameraSpeed = 0;
 	camera.setPosition(camera.getPosition() + glm::vec3(0, 50, 0));
-
 }
 
 TestScene::~TestScene() {
 }
 
 void TestScene::update(time_t dt) {
-	if(Keyboard::checkKeyEvent(Keyboard::Escape) == Keyboard::keyPressed){
+	if (Keyboard::checkKeyEvent(Keyboard::Escape) == Keyboard::keyPressed) {
 		Window::getMainWindow()->stop();
 		return;
 	}
@@ -90,7 +89,7 @@ void TestScene::update(time_t dt) {
 		cameraDX += 1;
 	}
 	bool skip = false;
-	if(Keyboard::checkKeyEvent(Keyboard::Space) == Keyboard::keyPressed){
+	if (Keyboard::checkKeyEvent(Keyboard::Space) == Keyboard::keyPressed) {
 		cameraSpeed += 5;
 		skip = true;
 	}
@@ -99,7 +98,7 @@ void TestScene::update(time_t dt) {
 	cameraDZ *= moveSpeed * secondScale;
 
 	cameraSpeed -= 9.8f * secondScale;
-	if(camera.getPosition().y + cameraDY - 8 < 0 && !skip){
+	if (camera.getPosition().y + cameraDY - 8 < 0 && !skip) {
 //		camera.setY(50);
 		cameraSpeed = 0;
 	}
