@@ -37,7 +37,10 @@ TestScene::TestScene() {
 			0, 1, 0,
 	};
 
-	unsigned int indices1[] = { 0, 1, 2, 0, 2, 3 };
+	unsigned int indices1[] = {
+			0, 1, 2,
+			0, 2, 3
+	};
 
 	ResourceManager * manager = ResourceManager::getResourceManger();
 
@@ -46,7 +49,7 @@ TestScene::TestScene() {
 	manager->loadShaderProgram("textureShader", "textureShader");
 	manager->loadTexture("BlockSheet");
 
-	model = Model(manager->getMesh("Square"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("MonkeyFaceTexture"));
+	model = Model(manager->getMesh("Sphere3"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("MonkeyFaceTexture"));
 	model.translate(0, 2, 0);
 	model2 = Model(manager->getMesh("Sword2"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("MonkeyFaceTexture"));
 	model2.translate(3, 2, 0);
@@ -98,7 +101,7 @@ void TestScene::update(time_t dt) {
 	cameraDZ *= moveSpeed * secondScale;
 
 	cameraSpeed -= 9.8f * secondScale;
-	if (camera.getPosition().y + cameraDY - 8 < 0 && !skip) {
+	if (camera.getPosition().y + cameraDY < 10 && !skip) {
 //		camera.setY(50);
 		cameraSpeed = 0;
 	}
@@ -110,7 +113,21 @@ void TestScene::update(time_t dt) {
 	float mouseDY = Mouse::getLastMove().y * lookSpeed;
 
 	camera.moveInDirection(cameraDX, cameraDY, cameraDZ);
-	camera.rotate(mouseDX, mouseDY);
+	if (!Mouse::isMouseButtonPressed(Mouse::Button0)) {
+		camera.rotate(mouseDX, mouseDY);
+	}
+
+	float modelYaw = 0;
+	float modelPitch = 0;
+
+	if (Mouse::isMouseButtonPressed(Mouse::Button0)) {
+		modelYaw = Mouse::getLastMove().x;
+		modelPitch = Mouse::getLastMove().y;
+	}
+
+	model2.rotateYaw(modelYaw);
+	model2.rotatePitch(modelPitch);
+
 }
 
 void TestScene::draw() {

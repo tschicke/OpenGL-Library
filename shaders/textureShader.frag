@@ -1,6 +1,9 @@
 //textureShader.frag
 #version 330
 
+//uniform float lightY;//For point light
+
+//in vec3 position;
 in vec2 UV;
 in vec3 normal;
 
@@ -9,7 +12,9 @@ out vec3 color;
 uniform sampler2D myTextureSampler;
 
 void main(){
-	float diffuseIntensity = max(dot(normalize(normal), normalize(vec3(1, 1, 1))), 0);
+	vec3 normalizedNormal = normalize(normal);
+	float diffuseIntensity = max(dot(normalizedNormal, normalize(vec3(1, 1, 1))), 0);
+	//float pointIntensity = max(dot(normalizedNormal, normalize(vec3(0, lightY, 2) - position)), 0);//For point light
 	float ambientIntensity = 0.2f;
 
 	vec2 glUV;

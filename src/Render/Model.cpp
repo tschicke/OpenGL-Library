@@ -173,9 +173,9 @@ void Model::draw(Camera* camera) {
 	shaderProgram->useShaderProgram();
 	shaderProgram->setUniform("MVPMatrix", &MVPMatrix);
 	shaderProgram->setUniform("NormalMatrix", &NormalMatrix);
-//	shaderProgram->setUniform("modelMatrix", &modelMatrix);
-//	shaderProgram->setUniform("viewMatrix", &viewMatrix);
-//	shaderProgram->setUniform("projectionMatrix", &projectionMatrix);
+//	shaderProgram->setUniform("ModelMatrix", &modelMatrix);
+//	shaderProgram->setUniform("ViewMatrix", &viewMatrix);
+//	shaderProgram->setUniform("ProjectionMatrix", &projectionMatrix);
 
 	mesh->render();
 
