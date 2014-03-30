@@ -7,7 +7,11 @@
 
 #include "Window.h"
 
+#ifdef _WIN32
 #include <gl/glew.h>
+#elif defined __linux__
+#include <GL/glew.h>
+#endif
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Scene.h"
@@ -51,7 +55,8 @@ void Window::create(int width, int height, int FOV, const char* title) {
 	projectionMatrix = glm::perspective((float) FOV, (float) width / (float) height, 0.1f, 2000.f);
 	running = false;
 	printFPS = true;
-	create(sf::VideoMode(width, height, 32), title);
+	sf::ContextSettings settings(24, 8, 2, 4, 2);//TODO change OpenGL version and antialiasing level
+	create(sf::VideoMode(width, height, 32), title, sf::Style::Default, settings);
 	setFramerateLimit(60); //TODO make way of changing this
 	initGL();
 	init();
@@ -172,6 +177,7 @@ void Window::initGL() {
 	}
 
 	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 }

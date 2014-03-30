@@ -6,7 +6,11 @@
  */
 
 #include "ShaderProgram.h"
+#ifdef _WIN32
 #include <gl/glew.h>
+#elif defined __linux__
+#include <GL/glew.h>
+#endif
 
 namespace ts {
 

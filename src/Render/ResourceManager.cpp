@@ -17,8 +17,11 @@
 #include <sstream>
 #include <vector>
 
+#ifdef _WIN32
 #include <gl/glew.h>
-#include <gl/gl.h>
+#elif defined __linux__
+#include <GL/glew.h>
+#endif
 
 namespace ts {
 
