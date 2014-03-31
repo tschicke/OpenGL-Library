@@ -13,6 +13,8 @@
 
 #include <iostream>
 
+#include "../Util/MathHelper.h"
+
 namespace ts {
 
 Model::Model() {
@@ -176,6 +178,13 @@ void Model::draw(Camera* camera) {
 //	shaderProgram->setUniform("ModelMatrix", &modelMatrix);
 //	shaderProgram->setUniform("ViewMatrix", &viewMatrix);
 //	shaderProgram->setUniform("ProjectionMatrix", &projectionMatrix);
+
+//	static float tempAngle = 0;
+//	tempAngle++;
+//	if(tempAngle > 360) tempAngle = 0;
+//	static float tempY = 0;
+//	tempY = (MathHelper::sin_float(MathHelper::toRadians(tempAngle)) + 1) * 2;
+//	shaderProgram->setUniform("lightY", tempY);
 
 	mesh->render();
 
