@@ -7,8 +7,11 @@
 
 #include "Texture.h"
 
+#ifdef _WIN32
 #include <gl/glew.h>
-#include <gl/gl.h>
+#elif defined __linux__
+#include <GL/glew.h>
+#endif
 
 #include <iostream>
 #include <fstream>
