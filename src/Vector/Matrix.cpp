@@ -13,6 +13,17 @@ namespace ts {
 namespace Vector {
 
 Matrix4::Matrix4() {
+	columns[0] = vec4(1, 0, 0, 0);
+	columns[1] = vec4(0, 1, 0, 0);
+	columns[2] = vec4(0, 0, 1, 0);
+	columns[3] = vec4(0, 0, 0, 1);
+}
+
+Matrix4::Matrix4(vec4 column0, vec4 column1, vec4 column2, vec4 column3) {
+	columns[0] = column0;
+	columns[1] = column1;
+	columns[2] = column2;
+	columns[3] = column3;
 }
 
 vec4& Matrix4::operator[](std::size_t index) {

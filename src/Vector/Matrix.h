@@ -16,6 +16,7 @@ namespace Vector {
 class Matrix4 {
 public:
 	Matrix4();
+	Matrix4(vec4 column0, vec4 column1, vec4 column2, vec4 column3);
 
 	vec4 columns[4];
 
