@@ -13,6 +13,7 @@
 
 #include "src/Vector/Vector.h"
 #include "src/Vector/Matrix.h"
+#include "src/Vector/MatrixOperations.h"
 
 int main() {
 	ts::Window * mainWindow = ts::Window::getMainWindow();
