@@ -13,10 +13,17 @@ namespace ts {
 namespace Vector {
 
 Matrix4::Matrix4() {
-	columns[0] = vec4(1, 0, 0, 0);
-	columns[1] = vec4(0, 1, 0, 0);
-	columns[2] = vec4(0, 0, 1, 0);
-	columns[3] = vec4(0, 0, 0, 1);
+	columns[0] = vec4(0, 0, 0, 0);
+	columns[1] = vec4(0, 0, 0, 0);
+	columns[2] = vec4(0, 0, 0, 0);
+	columns[3] = vec4(0, 0, 0, 0);
+}
+
+Matrix4::Matrix4(float diagonals) {
+	columns[0] = vec4(diagonals, 0, 0, 0);
+	columns[1] = vec4(0, diagonals, 0, 0);
+	columns[2] = vec4(0, 0, diagonals, 0);
+	columns[3] = vec4(0, 0, 0, diagonals);
 }
 
 Matrix4::Matrix4(vec4 column0, vec4 column1, vec4 column2, vec4 column3) {

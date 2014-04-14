@@ -17,7 +17,7 @@ mat4 ortho(float left, float right, float bottom, float top, float near, float f
 	result[3][0] = -(right + left) / (right - left);
 	result[1][1] = 2 / (top - bottom);
 	result[3][1] = -(top + bottom) / (top - bottom);
-	result[2][2] = -2 / (far - near);
+	result[2][2] = 2 / (far - near);
 	result[3][2] = -(far + near) / (far - near);
 
 	return result;
