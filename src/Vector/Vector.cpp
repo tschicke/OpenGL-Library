@@ -9,6 +9,8 @@
 
 #include "Vector.h"
 
+#include <iostream>
+
 namespace ts {
 namespace Vector {
 
@@ -111,17 +113,17 @@ Vector4::Vector4(float x, float y, float z, float w) {
 	this->w = w;
 }
 
-float& ts::Vector::Vector4::operator [](std::size_t index) {
+float& Vector4::operator [](std::size_t index) {
 	assert(index < 4);
 	return (&x)[index];
 }
 
-const float& ts::Vector::Vector4::operator [](std::size_t index) const {
+const float& Vector4::operator [](std::size_t index) const {
 	assert(index < 4);
 	return const_cast<Vector4&>(*this)[index];
 }
 
-Vector4& ts::Vector::Vector4::operator +=(const Vector4& v1) {
+Vector4& Vector4::operator +=(const Vector4& v1) {
 	x += v1.x;
 	y += v1.y;
 	z += v1.z;
@@ -129,7 +131,7 @@ Vector4& ts::Vector::Vector4::operator +=(const Vector4& v1) {
 	return *this;
 }
 
-Vector4& ts::Vector::Vector4::operator -=(const Vector4& v1) {
+Vector4& Vector4::operator -=(const Vector4& v1) {
 	x -= v1.x;
 	y -= v1.y;
 	z -= v1.z;
@@ -137,7 +139,7 @@ Vector4& ts::Vector::Vector4::operator -=(const Vector4& v1) {
 	return *this;
 }
 
-Vector4& ts::Vector::Vector4::operator *=(const float scalar) {
+Vector4& Vector4::operator *=(const float scalar) {
 	x *= scalar;
 	y *= scalar;
 	z *= scalar;
@@ -145,7 +147,7 @@ Vector4& ts::Vector::Vector4::operator *=(const float scalar) {
 	return *this;
 }
 
-Vector4& ts::Vector::Vector4::operator /=(const float scalar) {
+Vector4& Vector4::operator /=(const float scalar) {
 	x /= scalar;
 	y /= scalar;
 	z /= scalar;
@@ -169,30 +171,38 @@ Vector4 operator /(const float scalar, const Vector4& v1) {
 	return Vector4(v1) /= scalar;
 }
 
-} /* namespace Vector */
-} /* namespace ts */
-
-//ts::Vector::Vector2 ts::Vector::operator +(const Vector2& v1, const Vector2& v2) {
+//Vector2 operator +(const Vector2& v1, const Vector2& v2) {
 //	return Vector2(v1) += v2;
 //}
 //
-//ts::Vector::Vector2 ts::Vector::operator -(const Vector2& v1, const Vector2& v2) {
+//Vector2 operator -(const Vector2& v1, const Vector2& v2) {
 //	return Vector2(v1) -= v2;
 //}
 
-ts::Vector::Vector3 ts::Vector::operator +(const Vector3& v1, const Vector3& v2) {
+Vector3 operator +(const Vector3& v1, const Vector3& v2) {
 	return Vector3(v1) += v2;
 }
 
-ts::Vector::Vector3 ts::Vector::operator -(const Vector3& v1, const Vector3& v2) {
+Vector3 operator -(const Vector3& v1, const Vector3& v2) {
 	return Vector3(v1) -= v2;
 }
 
-ts::Vector::Vector4 ts::Vector::operator +(const Vector4& v1, const Vector4& v2) {
+Vector4 operator +(const Vector4& v1, const Vector4& v2) {
 	return Vector4(v1) += v2;
 }
 
-ts::Vector::Vector4 ts::Vector::operator -(const Vector4& v1, const Vector4& v2) {
+Vector4 operator -(const Vector4& v1, const Vector4& v2) {
 	return Vector4(v1) -= v2;
 }
+
+void Vector4::print(){
+	for(int i = 0; i < 4; ++i){
+		std::cout << (*this)[i] << '\n';
+	}
+	std::cout << '\n';
+}
+
+} /* namespace Vector */
+} /* namespace ts */
+
 

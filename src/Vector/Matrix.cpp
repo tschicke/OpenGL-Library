@@ -9,6 +9,8 @@
 
 #include "Matrix.h"
 
+#include <iostream>
+
 namespace ts {
 namespace Vector {
 
@@ -71,18 +73,15 @@ Matrix4& Matrix4::operator *=(const float scalar) {
 	return *this;
 }
 
-} /* namespace Vector */
-} /* namespace ts */
-
-ts::Vector::Matrix4 ts::Vector::operator +(const Matrix4& matrix1, const Matrix4& matrix2) {
+Matrix4 operator +(const Matrix4& matrix1, const Matrix4& matrix2) {
 	return Matrix4(matrix1) += matrix2;
 }
 
-ts::Vector::Matrix4 ts::Vector::operator -(const Matrix4& matrix1, const Matrix4& matrix2) {
+Matrix4 operator -(const Matrix4& matrix1, const Matrix4& matrix2) {
 	return Matrix4(matrix1) -= matrix2;
 }
 
-ts::Vector::Matrix4 ts::Vector::operator *(const Matrix4& matrix1, const Matrix4& matrix2) {
+Matrix4 operator *(const Matrix4& matrix1, const Matrix4& matrix2) {
 	Matrix4 result;
 	result[0] = matrix1 * matrix2[0];
 	result[1] = matrix1 * matrix2[1];
@@ -91,14 +90,27 @@ ts::Vector::Matrix4 ts::Vector::operator *(const Matrix4& matrix1, const Matrix4
 	return result;
 }
 
-ts::Vector::Matrix4 ts::Vector::operator *(const Matrix4& matrix, const float scalar) {
+Matrix4 operator *(const Matrix4& matrix, const float scalar) {
 	return Matrix4(matrix) *= scalar;
 }
 
-ts::Vector::Matrix4 ts::Vector::operator *(const float scalar, const Matrix4& matrix) {
+Matrix4 operator *(const float scalar, const Matrix4& matrix) {
 	return Matrix4(matrix) *= scalar;
 }
 
-ts::Vector::Vector4 ts::Vector::operator *(const Matrix4& matrix, const Vector4& vector) {
+Vector4 operator *(const Matrix4& matrix, const Vector4& vector) {
 	return vector[0] * matrix[0] + vector[1] * matrix[1] + vector[2] * matrix[2] + vector[3] * matrix[3];
 }
+
+void Matrix4::print(){
+	for(int y = 0; y < 4; ++y){
+		for(int x = 0; x < 4; ++x){
+			std::cout << (*this)[x][y] << ' ';
+		}
+		std::cout << '\n';
+	}
+}
+
+} /* namespace Vector */
+} /* namespace ts */
+

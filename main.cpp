@@ -26,9 +26,7 @@ int main() {
 	ts::Vector::mat4 testMatrix2 = ts::Vector::ortho(0, 11, 0, 11, 0, 11);
 	ts::Vector::vec4 testVector2 = testMatrix2 * ts::Vector::vec4(x, y, z, 1.f);
 
-	for(int i = 0; i < 4; ++i){
-		std::cout << testVector[i] << "    " << testVector2[i] << '\n';
-	}
+	testVector2.print();
 
 //	for (int y = 0; y < 4; ++y) {
 //		for (int x = 0; x < 4; ++x) {

@@ -79,6 +79,7 @@ public:
 	Vector4& operator*=(const float scalar);
 	Vector4& operator/=(const float scalar);
 
+	void print();
 };
 
 //Vector2 operator+(const Vector2& v1, const Vector2& v2);

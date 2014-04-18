@@ -28,6 +28,8 @@ public:
 	Matrix4& operator-=(const Matrix4& matrix);
 	Matrix4& operator*=(const Matrix4& matrix);
 	Matrix4& operator*=(const float scalar);
+
+	void print();
 };
 
 Matrix4 operator+(const Matrix4& matrix1, const Matrix4& matrix2);
