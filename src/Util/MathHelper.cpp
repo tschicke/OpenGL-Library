@@ -14,7 +14,7 @@ void MathHelper::init() {
 	SIN_TABLE = new float[3600];
 
 	for (int i = 0; i < 3600; ++i) {
-		SIN_TABLE[i] = sinf(i * 2.f * MATH_PI / 3600.f);
+		SIN_TABLE[i] = sin(i * 2.f * MATH_PI / 3600.f);
 	}
 }
 
@@ -24,7 +24,7 @@ void MathHelper::cleanup() {
 
 //Returns sine of angle (in radians)
 float MathHelper::sin_float(float angle) {
-	angle = fmodf(angle, 2.0 * MATH_PI);
+	angle = fmod(angle, 2.0 * MATH_PI);
 	if (angle < 0) {
 		angle += 2.f * MATH_PI;
 	}
@@ -34,7 +34,7 @@ float MathHelper::sin_float(float angle) {
 //Returns cosine of and (in radians)
 float MathHelper::cos_float(float angle) {
 	angle += toRadians(90);
-	angle = fmodf(angle, 2.0 * MATH_PI);
+	angle = fmod(angle, 2.0 * MATH_PI);
 	if (angle < 0) {
 		angle += 2.f * MATH_PI;
 	}

@@ -12,6 +12,7 @@
 #elif defined __linux__
 #include <GL/glew.h>
 #endif
+
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Scene.h"
