@@ -26,6 +26,17 @@ mat4 ortho(float left, float right, float bottom, float top, float near, float f
 
 }
 
+/**
+ * @brief Creates a frustrum projection matrix
+ *
+ * @param left left x Coordinate at near clipping plane
+ * @param right right x Coordinate at near clipping plane
+ * @param bottom bottom y Coordinate at near clipping plane
+ * @param top top y Coordinate at near clipping plane
+ * @param near z Coordinate of near clipping plane
+ * @param far z Coordinate of far clipping plane
+ * @return mat4 for projecting vertices into a frustrum
+ */
 mat4 frustrum(float left, float right, float bottom, float top, float near, float far) {
 	mat4 result(0);
 
