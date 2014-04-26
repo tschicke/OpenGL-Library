@@ -1,0 +1,10 @@
+1.
+	Implement Quaternions
+	1. a.
+		Implement rotations
+
+2.
+	Add way of creating view matrix
+
+3.
+	Add rotations in matrixTransform
