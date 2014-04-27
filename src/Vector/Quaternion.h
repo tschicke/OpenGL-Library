@@ -10,33 +10,39 @@
 
 #include <cstddef>
 
+#include "Vector.h"
+
 namespace ts {
 namespace Vector {
 
 class Quaternion {
 public:
 	Quaternion();
+	Quaternion(float a, float b, float c, float d);
+	Quaternion(float a, vec3 vector);
 
 	union {
-		int a, w;
+		float a, w;
 	};
 	union {
-		int b, x;
+		float b, x;
 	};
 	union {
-		int c, y;
+		float c, y;
 	};
 	union {
-		int d, z;
+		float d, z;
 	};
+
+	void print();
 
 	float& operator[](std::size_t index);
 	const float& operator[](std::size_t index) const;
-
-	Quaternion& operator*=(const Quaternion& quaternion);
 };
 
 Quaternion operator*(const Quaternion& q1, const Quaternion& q2);
+
+typedef Quaternion quat;
 
 } /* namespace Vector */
 } /* namespace ts */

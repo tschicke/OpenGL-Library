@@ -5,9 +5,9 @@
  *      Author: tyler
  */
 
-#include <assert.h>
-
 #include "Vector.h"
+
+#include <assert.h>
 
 #include <iostream>
 
@@ -196,10 +196,7 @@ Vector4 operator -(const Vector4& v1, const Vector4& v2) {
 }
 
 void Vector4::print(){
-	for(int i = 0; i < 4; ++i){
-		std::cout << (*this)[i] << '\n';
-	}
-	std::cout << '\n';
+	std::cout << "(" << x << ", " << y << ", " << z << ", " << w << ")\n";
 }
 
 } /* namespace Vector */
