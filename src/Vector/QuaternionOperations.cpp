@@ -6,18 +6,23 @@
  */
 
 #include "QuaternionOperations.h"
+#include "VectorOperations.h"
+
+#include <iostream>
 
 #include <cmath>
 
 namespace ts {
 namespace Vector {
 
-float norm(quat quaternion){
-
+float norm(quat q){
+	return sqrtf(q.a * q.a + q.b * q.b + q.c * q.c + q.d * q.d);
 }
 
-mat4 ts::Vector::quaternionToMatrix(quat q) {
+mat4 quaternionToMatrix(quat q) {
 	mat4 result(1.f);
+
+	q /= norm(q);
 
 	result[0][0] = 1 - 2 * (q.y * q.y + q.z * q.z);
 	result[1][0] = 2 * (q.x * q.y - q.z * q.w);
@@ -34,12 +39,14 @@ mat4 ts::Vector::quaternionToMatrix(quat q) {
 	return result;
 }
 
-quat ts::Vector::quatFromAngleAxis(float angle, vec3 axis) {
+quat angleAxisToQuaternion(float angle, vec3 axis) {
+	angle = angle * 3.14159265358979f / 180.f;
+	axis = normalize(axis);
 	return quat(cos(angle / 2), sin(angle / 2) * axis);
 }
 
-quat ts::Vector::quatFromAngleAxis(float angle, float axisX, float axisY, float axisZ) {
-	return quatFromAngleAxis(angle, vec3(axisX, axisY, axisZ));
+quat angleAxisToQuaternion(float angle, float axisX, float axisY, float axisZ) {
+	return angleAxisToQuaternion(angle, vec3(axisX, axisY, axisZ));
 }
 
 } /* namespace Vector */

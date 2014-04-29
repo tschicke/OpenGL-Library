@@ -18,18 +18,27 @@ Quaternion::Quaternion() {
 	a = b = c = d = 0;
 }
 
-Quaternion::Quaternion(float a, float b, float c, float d){
+Quaternion::Quaternion(float a, float b, float c, float d) {
 	this->a = a;
 	this->b = b;
 	this->c = c;
 	this->d = d;
 }
 
-Quaternion::Quaternion(float a, vec3 vector){
+Quaternion::Quaternion(float a, vec3 vector) {
 	this->a = a;
 	this->b = vector.x;
 	this->c = vector.y;
 	this->d = vector.z;
+}
+
+Quaternion& Quaternion::operator/=(const float scalar){
+	a /= scalar;
+	b /= scalar;
+	c /= scalar;
+	d /= scalar;
+
+	return *this;
 }
 
 float& Quaternion::operator [](std::size_t index) {
@@ -52,7 +61,11 @@ Quaternion operator *(const Quaternion& q1, const Quaternion& q2) {
 	return result;
 }
 
-void Quaternion::print(){
+Quaternion operator /(const Quaternion& q, const float& s) {
+	return Quaternion(q) /= s;
+}
+
+void Quaternion::print() {
 	std::cout << "(" << a << ", " << b << "i, " << c << "j, " << d << "k)\n";
 }
 

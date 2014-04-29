@@ -10,7 +10,7 @@
 
 #include "Matrix.h"
 #include "Vector.h"
-
+#include "Quaternion.h"
 
 namespace ts {
 namespace Vector {
@@ -19,8 +19,8 @@ float norm(quat quaternion);
 
 mat4 quaternionToMatrix(quat quaternion);
 
-quat quatFromAngleAxis(float angle, vec3 axis);
-quat quatFromAngleAxis(float angle, float axisX, float axisY, float axisZ);
+quat angleAxisToQuaternion(float angle, vec3 axis);
+quat angleAxisToQuaternion(float angle, float axisX, float axisY, float axisZ);
 
 
 } /* namespace Vector */

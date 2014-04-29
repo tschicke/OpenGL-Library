@@ -1,7 +1,7 @@
 1.
-	Implement Quaternions
+	Implement Quaternions - done
 	1. a.
-		Implement rotations
+		Implement rotations - done?
 
 2.
 	Add way of creating view matrix
