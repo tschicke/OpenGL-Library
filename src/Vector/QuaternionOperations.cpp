@@ -16,13 +16,17 @@ namespace ts {
 namespace Vector {
 
 float norm(quat q){
-	return sqrtf(q.a * q.a + q.b * q.b + q.c * q.c + q.d * q.d);
+	return sqrt(q.a * q.a + q.b * q.b + q.c * q.c + q.d * q.d);
+}
+
+quat normalize(quat q){
+	return q / norm(q);
 }
 
 mat4 quaternionToMatrix(quat q) {
 	mat4 result(1.f);
 
-	q /= norm(q);
+	q = normalize(q);
 
 	result[0][0] = 1 - 2 * (q.y * q.y + q.z * q.z);
 	result[1][0] = 2 * (q.x * q.y - q.z * q.w);

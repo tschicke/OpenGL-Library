@@ -32,7 +32,7 @@ Quaternion::Quaternion(float a, vec3 vector) {
 	this->d = vector.z;
 }
 
-Quaternion& Quaternion::operator/=(const float scalar){
+Quaternion& Quaternion::operator/=(const float scalar) {
 	a /= scalar;
 	b /= scalar;
 	c /= scalar;
@@ -61,7 +61,7 @@ Quaternion operator *(const Quaternion& q1, const Quaternion& q2) {
 	return result;
 }
 
-Quaternion operator /(const Quaternion& q, const float& s) {
+Quaternion operator /(const Quaternion& q, const float s) {
 	return Quaternion(q) /= s;
 }
 

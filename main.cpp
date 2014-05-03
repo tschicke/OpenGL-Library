@@ -20,8 +20,8 @@
 #include <glm/gtx/quaternion.hpp>
 
 int main() {
-	ts::Vector::Quaternion q1(1, 2, 3, 4);
-	ts::Vector::Quaternion q2(2, 3, 4, 1);
+//	ts::Vector::Quaternion q1(1, 2, 3, 4);
+//	ts::Vector::Quaternion q2(2, 3, 4, 1);
 
 //	(q1 * q2).print();
 
@@ -29,10 +29,10 @@ int main() {
 
 //	std::cout << quaternion.w << ' ' << quaternion.x << ' ' << quaternion.y << ' ' << quaternion.z << '\n';
 
-//	ts::Window * mainWindow = ts::Window::getMainWindow();
-//	mainWindow->create(1280, 720, 90, "OGL Lib");
-//	mainWindow->setBackgroundColorf(0.5f, 0.5f, 0.5f);
-//	mainWindow->setScene(new ts::TestScene);
-//	mainWindow->start();
+	ts::Window * mainWindow = ts::Window::getMainWindow();
+	mainWindow->create(1280, 720, 90, "OGL Lib");
+	mainWindow->setBackgroundColorf(0.5f, 0.5f, 0.5f);
+	mainWindow->setScene(new ts::TestScene);
+	mainWindow->start();
 }
 

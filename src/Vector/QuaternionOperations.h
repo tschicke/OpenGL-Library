@@ -16,6 +16,7 @@ namespace ts {
 namespace Vector {
 
 float norm(quat quaternion);
+quat normalize(quat quaternion);
 
 mat4 quaternionToMatrix(quat quaternion);
 
