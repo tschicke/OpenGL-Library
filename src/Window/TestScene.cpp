@@ -57,7 +57,7 @@ TestScene::TestScene() {
 //	plane.translate(-500, 0, -500);
 
 	cameraSpeed = 0;
-	camera.setPosition(camera.getPosition() + glm::vec3(0, 50, 0));
+	camera.setPosition(camera.getPosition() + ts::Vector::vec3(0, 50, 0));
 }
 
 TestScene::~TestScene() {

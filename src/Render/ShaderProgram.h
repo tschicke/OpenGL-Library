@@ -8,7 +8,8 @@
 #ifndef SHADERPROGRAM_H_
 #define SHADERPROGRAM_H_
 
-#include <glm/glm.hpp>
+#include "../Vector/Vector.h"
+#include "../Vector/Matrix.h"
 
 namespace ts {
 
@@ -21,12 +22,12 @@ public:
 	static void disableShaderProgram();
 
 	// Setting vectors
-	void setUniform(const char * sName, glm::vec2* vVectors, int iCount = 1);
-	void setUniform(const char * sName, const glm::vec2 vVector);
-	void setUniform(const char * sName, glm::vec3* vVectors, int iCount = 1);
-	void setUniform(const char * sName, const glm::vec3 vVector);
-	void setUniform(const char * sName, glm::vec4* vVectors, int iCount = 1);
-	void setUniform(const char * sName, const glm::vec4 vVector);
+	void setUniform(const char * sName, ts::Vector::vec2* vVectors, int iCount = 1);
+	void setUniform(const char * sName, const ts::Vector::vec2 vVector);
+	void setUniform(const char * sName, ts::Vector::vec3* vVectors, int iCount = 1);
+	void setUniform(const char * sName, const ts::Vector::vec3 vVector);
+	void setUniform(const char * sName, ts::Vector::vec4* vVectors, int iCount = 1);
+	void setUniform(const char * sName, const ts::Vector::vec4 vVector);
 
 	// Setting floats
 	void setUniform(const char * sName, float* fValues, int iCount = 1);
@@ -37,8 +38,8 @@ public:
 	void setUniform(const char * sName, const int iValue);
 
 	// Setting 4x4 matrices
-	void setUniform(const char * sName, glm::mat4* mMatrices, int iCount = 1);
-	void setUniform(const char * sName, const glm::mat4 mMatrix);
+	void setUniform(const char * sName, ts::Vector::mat4* mMatrices, int iCount = 1);
+	void setUniform(const char * sName, const ts::Vector::mat4 mMatrix);
 
 	friend class ResourceManager;
 private:

@@ -12,7 +12,7 @@
 
 #include "../Common.h"
 
-#include <glm/glm.hpp>
+#include "../Vector/Matrix.h"
 
 namespace ts {
 
@@ -38,7 +38,7 @@ public:
 
 	void setFOV(int FOV);
 
-	glm::mat4 * getProjectionMatrix();
+	ts::Vector::mat4 * getProjectionMatrix();
 
 	using sf::Window::create;
 
@@ -65,7 +65,7 @@ protected:
 	int FOV;
 	bool printFPS;
 
-	glm::mat4 projectionMatrix;
+	ts::Vector::mat4 projectionMatrix;
 };
 
 } /* namespace ts */

@@ -7,42 +7,43 @@
 
 #include "Camera.h"
 
-#include <glm/gtc/matrix_transform.hpp>
+#include "../Vector/MatrixTransform.h"
+#include "../Vector/VectorOperations.h"
 
 #include "MathHelper.h"
 
 namespace ts {
 
 Camera::Camera() {
-	init(glm::vec3());
+	init(ts::Vector::vec3());
 }
 
 Camera::~Camera() {
 }
 
-Camera::Camera(glm::vec3 position) {
+Camera::Camera(ts::Vector::vec3 position) {
 	init(position);
 }
 
-void Camera::init(glm::vec3 position) {
+void Camera::init(ts::Vector::vec3 position) {
 	yaw = 0;
 	pitch = 0;
 	this->position = position;
-	lookDir = glm::vec3(0, 0, -1);
-	upVector = glm::vec3(0, 1, 0);
+	lookDir = ts::Vector::vec3(0, 0, -1);
+	upVector = ts::Vector::vec3(0, 1, 0);
 	viewMatrixNeedsUpdate = true;
 }
 
-void Camera::move(glm::vec3 moveVector) {
+void Camera::move(ts::Vector::vec3 moveVector) {
 	position += moveVector;
 	viewMatrixNeedsUpdate = true;
 }
 
 void Camera::move(float dx, float dy, float dz) {
-	move(glm::vec3(dx, dy, dz));
+	move(ts::Vector::vec3(dx, dy, dz));
 }
 
-void Camera::moveInDirection(glm::vec3 moveVector) {
+void Camera::moveInDirection(ts::Vector::vec3 moveVector) {
 	float sinYaw = MathHelper::sin_float(MathHelper::toRadians(yaw));
 	float cosYaw = MathHelper::cos_float(MathHelper::toRadians(yaw));
 
@@ -54,16 +55,16 @@ void Camera::moveInDirection(glm::vec3 moveVector) {
 }
 
 void Camera::moveInDirection(float dx, float dy, float dz) {
-	moveInDirection(glm::vec3(dx, dy, dz));
+	moveInDirection(ts::Vector::vec3(dx, dy, dz));
 }
 
-void Camera::setPosition(glm::vec3 newPosition) {
+void Camera::setPosition(ts::Vector::vec3 newPosition) {
 	position = newPosition;
 	viewMatrixNeedsUpdate = true;
 }
 
 void Camera::setPosition(float x, float y, float z) {
-	setPosition(glm::vec3(x, y, z));
+	setPosition(ts::Vector::vec3(x, y, z));
 }
 
 void Camera::setX(float x){
@@ -81,11 +82,11 @@ void Camera::setZ(float z){
 	viewMatrixNeedsUpdate = true;
 }
 
-glm::vec3 Camera::getPosition() {
+ts::Vector::vec3 Camera::getPosition() {
 	return position;
 }
 
-glm::vec3 Camera::getDirection() {
+ts::Vector::vec3 Camera::getDirection() {
 	return lookDir;
 }
 
@@ -100,23 +101,23 @@ void Camera::rotate(int dx, int dy) {
 	float lookDirY = MathHelper::sin_float(MathHelper::toRadians(pitch));
 	float lookDirZ = MathHelper::cos_float(MathHelper::toRadians(pitch)) * -MathHelper::cos_float(MathHelper::toRadians(yaw));
 
-	lookDir = glm::vec3(lookDirX, lookDirY, lookDirZ);
+	lookDir = ts::Vector::vec3(lookDirX, lookDirY, lookDirZ);
 
 	viewMatrixNeedsUpdate = true;
 }
 
 void Camera::lookAt(float x, float y, float z) {
-	lookAt(glm::vec3(x, y, z));
+	lookAt(ts::Vector::vec3(x, y, z));
 }
 
-void Camera::lookAt(glm::vec3 position) {
-	lookDir = glm::normalize(position - this->position);
+void Camera::lookAt(ts::Vector::vec3 position) {
+	lookDir = ts::Vector::normalize(position - this->position);
 	viewMatrixNeedsUpdate = true;
 }
 
-glm::mat4 * Camera::getViewMatrix() {
+ts::Vector::mat4 * Camera::getViewMatrix() {
 	if (viewMatrixNeedsUpdate) {
-		viewMatrix = glm::lookAt(position, position + lookDir, upVector);
+		viewMatrix = ts::Vector::lookAt(position, position + lookDir, upVector);
 		viewMatrixNeedsUpdate = false;
 	}
 	return &viewMatrix;

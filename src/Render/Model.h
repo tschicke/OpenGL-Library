@@ -12,7 +12,9 @@
 #include "Mesh.h"
 #include "ShaderProgram.h"
 #include "Texture.h"
-#include <glm/glm.hpp>
+
+#include "../Vector/Vector.h"
+#include "../Vector/Matrix.h"
 
 namespace ts {
 
@@ -20,14 +22,14 @@ class Model {
 public:
 	Model();
 	Model(Mesh * mesh, ShaderProgram * shaderProgram, Texture * texture);
-	Model(Mesh * mesh, ShaderProgram * shaderProgram, Texture * texture, glm::vec3 position, float yaw, float pitch);
+	Model(Mesh * mesh, ShaderProgram * shaderProgram, Texture * texture, ts::Vector::vec3 position, float yaw, float pitch);
 	virtual ~Model();
 
 	void translate(float x, float y, float z);
-	void translate(glm::vec3 translateVector);
+	void translate(ts::Vector::vec3 translateVector);
 	void setPosition(float x, float y, float z);
-	void setPosition(glm::vec3 position);
-	glm::vec3 getPosition();
+	void setPosition(ts::Vector::vec3 position);
+	ts::Vector::vec3 getPosition();
 
 	void rotateYaw(int deltaYaw);
 	void rotatePitch(int deltaPitch);
@@ -39,12 +41,12 @@ public:
 	void scaleX(float scaleFactor);
 	void scaleY(float scaleFactor);
 	void scaleZ(float scaleFactor);
-	void scale(glm::vec3 scaleVector);
+	void scale(ts::Vector::vec3 scaleVector);
 	void setScaleX(float scaleX);
 	void setScaleY(float scaleY);
 	void setScaleZ(float scaleZ);
-	void setScale(glm::vec3 scaleVector);
-	glm::vec3 getScaleVector();
+	void setScale(ts::Vector::vec3 scaleVector);
+	ts::Vector::vec3 getScaleVector();
 
 	void setMesh(Mesh * mesh);
 	void setShader(ShaderProgram * shaderProgram);
@@ -57,14 +59,14 @@ private:
 	ShaderProgram * shaderProgram;
 	Texture * texture;
 
-	glm::mat4 modelMatrix;
+	ts::Vector::mat4 modelMatrix;
 	bool modelMatrixNeedsUpdate;
 
-	glm::vec3 position;
-	glm::vec3 scaleVector;
+	ts::Vector::vec3 position;
+	ts::Vector::vec3 scaleVector;
 	int yaw, pitch;
 
-	void init(Mesh * mesh, ShaderProgram * shaderProgram, Texture * texture, glm::vec3 position, float yaw, float pitch);
+	void init(Mesh * mesh, ShaderProgram * shaderProgram, Texture * texture, ts::Vector::vec3 position, float yaw, float pitch);
 };
 
 } /* namespace ts */

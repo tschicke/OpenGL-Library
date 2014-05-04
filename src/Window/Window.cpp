@@ -13,7 +13,7 @@
 #include <GL/glew.h>
 #endif
 
-#include <glm/gtc/matrix_transform.hpp>
+#include "../Vector/MatrixTransform.h"
 
 #include "Scene.h"
 
@@ -53,7 +53,7 @@ void Window::create(int width, int height, int FOV, const char* title) {
 	this->width = width;
 	this->height = height;
 	this->FOV = FOV;
-	projectionMatrix = glm::perspective((float) FOV, (float) width / (float) height, 0.1f, 2000.f);
+	projectionMatrix = ts::Vector::perspective(FOV, width, height, 0.1f, 2000.f);
 	running = false;
 	printFPS = true;
 	sf::ContextSettings settings(24, 8, 2, 4, 2);//TODO change OpenGL version and antialiasing level
@@ -187,7 +187,7 @@ void Window::setFOV(int FOV) {
 	this->FOV = FOV;
 }
 
-glm::mat4* Window::getProjectionMatrix() {
+ts::Vector::mat4* Window::getProjectionMatrix() {
 	return &projectionMatrix;
 }
 

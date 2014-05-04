@@ -8,7 +8,6 @@
 #ifndef MESH_H_
 #define MESH_H_
 
-#include <glm/glm.hpp>
 #include <vector>
 
 namespace ts {

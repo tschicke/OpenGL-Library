@@ -7,7 +7,7 @@
 
 #include "Model.h"
 
-#include <glm/gtx/transform.hpp>
+#include "../Vector/MatrixTransform.h"
 
 #include "../Window/Window.h"
 
@@ -18,23 +18,23 @@
 namespace ts {
 
 Model::Model() {
-	init(NULL/*default mesh*/, NULL/*defaultShader*/, NULL/*defaultTexture*/, glm::vec3(0, 0, 0), 0, 0);
+	init(NULL/*default mesh*/, NULL/*defaultShader*/, NULL/*defaultTexture*/, ts::Vector::vec3(0, 0, 0), 0, 0);
 }
 
 Model::Model(Mesh* mesh, ShaderProgram* shaderProgram, Texture * texture) {
-	init(mesh, shaderProgram, texture, glm::vec3(0, 0, 0), 0, 0);
+	init(mesh, shaderProgram, texture, ts::Vector::vec3(0, 0, 0), 0, 0);
 }
 
-Model::Model(Mesh* mesh, ShaderProgram* shaderProgram, Texture * texture, glm::vec3 position, float yaw, float pitch) {
+Model::Model(Mesh* mesh, ShaderProgram* shaderProgram, Texture * texture, ts::Vector::vec3 position, float yaw, float pitch) {
 	init(mesh, shaderProgram, texture, position, yaw, pitch);
 }
 
-void Model::init(Mesh * mesh, ShaderProgram * shaderProgram, Texture * texture, glm::vec3 position, float yaw, float pitch) {
+void Model::init(Mesh * mesh, ShaderProgram * shaderProgram, Texture * texture, ts::Vector::vec3 position, float yaw, float pitch) {
 	this->mesh = mesh;
 	this->shaderProgram = shaderProgram;
 	this->texture = texture;
 	this->position = position;
-	this->scaleVector = glm::vec3(1, 1, 1);
+	this->scaleVector = ts::Vector::vec3(1, 1, 1);
 	this->yaw = yaw;
 	this->pitch = pitch;
 	modelMatrixNeedsUpdate = true;
@@ -44,24 +44,24 @@ Model::~Model() {
 }
 
 void Model::translate(float x, float y, float z) {
-	translate(glm::vec3(x, y, z));
+	translate(ts::Vector::vec3(x, y, z));
 }
 
-void Model::translate(glm::vec3 translateVector) {
+void Model::translate(ts::Vector::vec3 translateVector) {
 	position += translateVector;
 	modelMatrixNeedsUpdate = true;
 }
 
 void Model::setPosition(float x, float y, float z) {
-	setPosition(glm::vec3(x, y, z));
+	setPosition(ts::Vector::vec3(x, y, z));
 }
 
-void Model::setPosition(glm::vec3 position) {
+void Model::setPosition(ts::Vector::vec3 position) {
 	this->position = position;
 	modelMatrixNeedsUpdate = true;
 }
 
-glm::vec3 Model::getPosition() {
+ts::Vector::vec3 Model::getPosition() {
 	return position;
 }
 
@@ -80,8 +80,10 @@ void Model::scaleZ(float scaleFactor) {
 	modelMatrixNeedsUpdate = true;
 }
 
-void Model::scale(glm::vec3 scaleVector){
-	this->scaleVector *= scaleVector;
+void Model::scale(ts::Vector::vec3 scaleVector){
+	this->scaleVector.x *= scaleVector.x;
+	this->scaleVector.y *= scaleVector.y;
+	this->scaleVector.z *= scaleVector.z;
 	modelMatrixNeedsUpdate = true;
 }
 
@@ -100,12 +102,12 @@ void Model::setScaleZ(float scaleZ) {
 	modelMatrixNeedsUpdate = true;
 }
 
-void Model::setScale(glm::vec3 scaleVector){
+void Model::setScale(ts::Vector::vec3 scaleVector){
 	this->scaleVector = scaleVector;
 	modelMatrixNeedsUpdate = true;
 }
 
-glm::vec3 Model::getScaleVector() {
+ts::Vector::vec3 Model::getScaleVector() {
 	return scaleVector;
 }
 
@@ -158,7 +160,8 @@ void Model::draw(Camera* camera) {
 		return;
 	}
 	if(modelMatrixNeedsUpdate){
-		modelMatrix = glm::translate(position) * glm::rotate((float) yaw, 0.f, 1.f, 0.f) * glm::rotate((float) pitch, 1.f, 0.f, 0.f) * glm::scale(scaleVector);
+//		modelMatrix = ts::Vector::translate(position) * ts::Vector::rotate((float) yaw, 0.f, 1.f, 0.f) * ts::Vector::rotate((float) pitch, 1.f, 0.f, 0.f) * ts::Vector::scale(scaleVector);
+		modelMatrix = ts::Vector::translate(position);
 		modelMatrixNeedsUpdate = false;
 	}
 
@@ -166,11 +169,12 @@ void Model::draw(Camera* camera) {
 		texture->bindTexture();
 	}
 
-	glm::mat4 viewMatrix = *(camera->getViewMatrix());
-	glm::mat4 projectionMatrix = *(ts::Window::getMainWindow()->getProjectionMatrix());
+	ts::Vector::mat4 viewMatrix = *(camera->getViewMatrix());
+	ts::Vector::mat4 projectionMatrix = *(ts::Window::getMainWindow()->getProjectionMatrix());
 
-	glm::mat4 MVPMatrix = projectionMatrix * viewMatrix * modelMatrix;
-	glm::mat4 NormalMatrix = glm::transpose(glm::inverse(modelMatrix));
+	ts::Vector::mat4 MVPMatrix = projectionMatrix * viewMatrix * modelMatrix;
+//	ts::Vector::mat4 NormalMatrix = ts::Vector::transpose(ts::Vector::inverse(modelMatrix));
+	ts::Vector::mat4 NormalMatrix = ts::Vector::mat4(1);
 
 	shaderProgram->useShaderProgram();
 	shaderProgram->setUniform("MVPMatrix", &MVPMatrix);
@@ -178,13 +182,6 @@ void Model::draw(Camera* camera) {
 //	shaderProgram->setUniform("ModelMatrix", &modelMatrix);
 //	shaderProgram->setUniform("ViewMatrix", &viewMatrix);
 //	shaderProgram->setUniform("ProjectionMatrix", &projectionMatrix);
-
-//	static float tempAngle = 0;
-//	tempAngle++;
-//	if(tempAngle > 360) tempAngle = 0;
-//	static float tempY = 0;
-//	tempY = (MathHelper::sin_float(MathHelper::toRadians(tempAngle)) + 1) * 2;
-//	shaderProgram->setUniform("lightY", tempY);
 
 	mesh->render();
 

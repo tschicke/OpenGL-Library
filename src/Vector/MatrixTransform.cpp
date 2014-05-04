@@ -67,21 +67,37 @@ mat4 perspective(float fov, float width, float height, float near, float far) {
 }
 
 mat4 translate(float x, float y, float z) {
+	return translate(vec3(x, y, z));
+}
+
+mat4 translate(vec3 translateVector) {
 	mat4 result(1.f);
 
-	result[3][0] = x;
-	result[3][1] = y;
-	result[3][2] = z;
+	result[3][0] = translateVector.x;
+	result[3][1] = translateVector.y;
+	result[3][2] = translateVector.z;
 
 	return result;
 }
 
 mat4 scale(float x, float y, float z) {
+	return scale(vec3(x, y, z));
+}
+
+mat4 lookAt(vec3 cameraPosition, vec3 lookCenter, vec3 up) {
+	return translate(-1 * cameraPosition);
+}
+
+mat4 lookAt(vec3 cameraPosition, float yaw, float pitch, float roll) {
+	return translate(-1 * cameraPosition);
+}
+
+mat4 scale(vec3 scaleVector) {
 	mat4 result(1.f);
 
-	result[0][0] = x;
-	result[1][1] = y;
-	result[2][2] = z;
+	result[0][0] = scaleVector.x;
+	result[1][1] = scaleVector.y;
+	result[2][2] = scaleVector.z;
 
 	return result;
 }
