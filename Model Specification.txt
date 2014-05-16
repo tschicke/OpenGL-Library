@@ -1,0 +1,20 @@
+Constructors:
+	Model()
+	Model(Mesh, Shader, Texture)
+	Model(Mesh, Shader, Texture, Position)
+
+Setters:
+	setPosition(vec3 position)
+	setPosition(float x, float y, float z)
+	
+	setRotationQuaternion(quat 
+	
+Translations:
+	translate(vec3 offset)
+	translate(float xOffset, float yOffset, float zOffset)
+	
+	scale(vec3 scaleVector)
+	scale(float xScale, float yScale, float zScale)
+	
+	rotate(float angle, vec3 axis)
+	rotate(float angle, float axisX, float axisY, float axisZ)

@@ -49,7 +49,7 @@ TestScene::TestScene() {
 	manager->loadShaderProgram("textureShader", "textureShader");
 	manager->loadTexture("BlockSheet");
 
-	model = Model(manager->getMesh("Sphere"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("MonkeyFaceTexture"));
+	model = Model(manager->getMesh("Sphere2"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("MonkeyFaceTexture"));
 	model.translate(0, 2, 0);
 	model2 = Model(manager->getMesh("Sword2"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("MonkeyFaceTexture"));
 	model2.translate(3, 2, 0);

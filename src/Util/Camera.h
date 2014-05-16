@@ -34,6 +34,8 @@ public:
 	void setY(float y);
 	void setZ(float z);
 
+	void addRoll(int add);
+
 	ts::Vector::vec3 getPosition();
 	ts::Vector::vec3 getDirection();
 	ts::Vector::mat4 * getViewMatrix();
@@ -43,7 +45,7 @@ private:
 	ts::Vector::vec3 upVector;
 	ts::Vector::mat4 viewMatrix;
 
-	int yaw, pitch;
+	int yaw, pitch, roll;
 
 	bool viewMatrixNeedsUpdate;
 };

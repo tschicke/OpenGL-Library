@@ -47,8 +47,12 @@ public:
 	Vector3& operator+=(const Vector3& v1);
 	Vector3& operator-=(const Vector3& v1);
 
+	Vector3 operator-();
+
 	Vector3& operator*=(const float scalar);
 	Vector3& operator/=(const float scalar);
+
+	void print();
 };
 
 class Vector4 {
@@ -75,6 +79,8 @@ public:
 
 	Vector4& operator+=(const Vector4& v1);
 	Vector4& operator-=(const Vector4& v1);
+
+	Vector4 operator-();
 
 	Vector4& operator*=(const float scalar);
 	Vector4& operator/=(const float scalar);

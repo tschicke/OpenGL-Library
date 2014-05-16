@@ -6,6 +6,9 @@
  */
 
 #include "MatrixTransform.h"
+#include "VectorOperations.h"
+#include "Quaternion.h"
+#include "QuaternionOperations.h"
 
 #include <cmath>
 
@@ -85,11 +88,29 @@ mat4 scale(float x, float y, float z) {
 }
 
 mat4 lookAt(vec3 cameraPosition, vec3 lookCenter, vec3 up) {
-	return translate(-1 * cameraPosition);
+	vec3 front = normalize(lookCenter - cameraPosition);
+	vec3 right = normalize(cross(front, up));
+	up = cross(right, front);
+
+	mat4 result(1);
+	result[0][0] = right.x;
+	result[1][0] = right.y;
+	result[2][0] = right.z;
+	result[0][1] = up.x;
+	result[1][1] = up.y;
+	result[2][1] = up.z;
+	result[0][2] = -front.x;
+	result[1][2] = -front.y;
+	result[2][2] = -front.z;
+	result[3][0] = -dot(right, cameraPosition);
+	result[3][1] = -dot(up, cameraPosition);
+	result[3][2] = dot(front, cameraPosition);
+	return result;
 }
 
 mat4 lookAt(vec3 cameraPosition, float yaw, float pitch, float roll) {
-	return translate(-1 * cameraPosition);
+	ts::Vector::quat rotation = ts::Vector::angleAxisToQuaternion(-roll, 0, 0, 1) * ts::Vector::angleAxisToQuaternion(-pitch, 1, 0, 0) * ts::Vector::angleAxisToQuaternion(yaw, 0, 1, 0);
+	return ts::Vector::quaternionToMatrix(rotation) * translate(-cameraPosition);
 }
 
 mat4 scale(vec3 scaleVector) {

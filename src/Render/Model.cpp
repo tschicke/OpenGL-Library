@@ -8,6 +8,8 @@
 #include "Model.h"
 
 #include "../Vector/MatrixTransform.h"
+#include "../Vector/Quaternion.h"
+#include "../Vector/QuaternionOperations.h"
 
 #include "../Window/Window.h"
 
@@ -160,8 +162,8 @@ void Model::draw(Camera* camera) {
 		return;
 	}
 	if(modelMatrixNeedsUpdate){
-//		modelMatrix = ts::Vector::translate(position) * ts::Vector::rotate((float) yaw, 0.f, 1.f, 0.f) * ts::Vector::rotate((float) pitch, 1.f, 0.f, 0.f) * ts::Vector::scale(scaleVector);
-		modelMatrix = ts::Vector::translate(position);
+		ts::Vector::quat rotation = ts::Vector::angleAxisToQuaternion(yaw, 0, 1, 0) * ts::Vector::angleAxisToQuaternion(pitch, 1, 0, 0);
+		modelMatrix = ts::Vector::translate(position) * ts::Vector::quaternionToMatrix(rotation) * ts::Vector::scale(scaleVector);
 		modelMatrixNeedsUpdate = false;
 	}
 
