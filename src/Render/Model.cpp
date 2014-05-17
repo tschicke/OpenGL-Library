@@ -145,7 +145,6 @@ void Model::draw(Camera* camera) {
 		return;
 	}
 	if (modelMatrixNeedsUpdate) {
-		rotationQuaternion.print();
 		modelMatrix = ts::Vector::translate(position) * ts::Vector::quaternionToMatrix(rotationQuaternion) * ts::Vector::scale(scaleVector);
 		modelMatrixNeedsUpdate = false;
 	}
