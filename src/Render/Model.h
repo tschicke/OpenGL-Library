@@ -8,21 +8,23 @@
 #ifndef MODEL_H_
 #define MODEL_H_
 
-#include "../Util/Camera.h"
 #include "Mesh.h"
 #include "ShaderProgram.h"
 #include "Texture.h"
 
 #include "../Vector/Vector.h"
+#include "../Vector/Quaternion.h"
 #include "../Vector/Matrix.h"
 
 namespace ts {
+
+class Camera;
 
 class Model {
 public:
 	Model();
 	Model(Mesh * mesh, ShaderProgram * shaderProgram, Texture * texture);
-	Model(Mesh * mesh, ShaderProgram * shaderProgram, Texture * texture, ts::Vector::vec3 position, float yaw, float pitch);
+	Model(Mesh * mesh, ShaderProgram * shaderProgram, Texture * texture, ts::Vector::vec3 position);
 	virtual ~Model();
 
 	void translate(float x, float y, float z);
@@ -31,12 +33,10 @@ public:
 	void setPosition(ts::Vector::vec3 position);
 	ts::Vector::vec3 getPosition();
 
-	void rotateYaw(int deltaYaw);
-	void rotatePitch(int deltaPitch);
-	void setYaw(int yaw);
-	void setPitch(int pitch);
-	int getYaw();
-	int getPitch();
+	void rotate(float angle, float axisX, float axisY, float axisZ);
+	void rotate(float angle, ts::Vector::vec3 axis);
+	void resetRotation();
+
 
 	void scaleX(float scaleFactor);
 	void scaleY(float scaleFactor);
@@ -64,9 +64,9 @@ private:
 
 	ts::Vector::vec3 position;
 	ts::Vector::vec3 scaleVector;
-	int yaw, pitch;
+	ts::Vector::quat rotationQuaternion;
 
-	void init(Mesh * mesh, ShaderProgram * shaderProgram, Texture * texture, ts::Vector::vec3 position, float yaw, float pitch);
+	void init(Mesh * mesh, ShaderProgram * shaderProgram, Texture * texture, ts::Vector::vec3 position);
 };
 
 } /* namespace ts */

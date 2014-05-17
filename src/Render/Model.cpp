@@ -7,6 +7,8 @@
 
 #include "Model.h"
 
+#include "../Util/Camera.h"
+
 #include "../Vector/MatrixTransform.h"
 #include "../Vector/Quaternion.h"
 #include "../Vector/QuaternionOperations.h"
@@ -20,25 +22,24 @@
 namespace ts {
 
 Model::Model() {
-	init(NULL/*default mesh*/, NULL/*defaultShader*/, NULL/*defaultTexture*/, ts::Vector::vec3(0, 0, 0), 0, 0);
+	init(NULL/*default mesh*/, NULL/*defaultShader*/, NULL/*defaultTexture*/, ts::Vector::vec3(0, 0, 0));
 }
 
 Model::Model(Mesh* mesh, ShaderProgram* shaderProgram, Texture * texture) {
-	init(mesh, shaderProgram, texture, ts::Vector::vec3(0, 0, 0), 0, 0);
+	init(mesh, shaderProgram, texture, ts::Vector::vec3(0, 0, 0));
 }
 
-Model::Model(Mesh* mesh, ShaderProgram* shaderProgram, Texture * texture, ts::Vector::vec3 position, float yaw, float pitch) {
-	init(mesh, shaderProgram, texture, position, yaw, pitch);
+Model::Model(Mesh* mesh, ShaderProgram* shaderProgram, Texture * texture, ts::Vector::vec3 position) {
+	init(mesh, shaderProgram, texture, position);
 }
 
-void Model::init(Mesh * mesh, ShaderProgram * shaderProgram, Texture * texture, ts::Vector::vec3 position, float yaw, float pitch) {
+void Model::init(Mesh * mesh, ShaderProgram * shaderProgram, Texture * texture, ts::Vector::vec3 position) {
 	this->mesh = mesh;
 	this->shaderProgram = shaderProgram;
 	this->texture = texture;
 	this->position = position;
 	this->scaleVector = ts::Vector::vec3(1, 1, 1);
-	this->yaw = yaw;
-	this->pitch = pitch;
+	this->rotationQuaternion = ts::Vector::quat(1, 0, 0, 0);//TODO add rotation initializer in constructor
 	modelMatrixNeedsUpdate = true;
 }
 
@@ -67,6 +68,20 @@ ts::Vector::vec3 Model::getPosition() {
 	return position;
 }
 
+void Model::rotate(float angle, float axisX, float axisY, float axisZ) {
+	rotate(angle, ts::Vector::vec3(axisX, axisY, axisZ));
+}
+
+void Model::rotate(float angle, ts::Vector::vec3 axis) {
+	rotationQuaternion = ts::Vector::angleAxisToQuaternion(angle, axis) * rotationQuaternion;
+	modelMatrixNeedsUpdate = true;
+}
+
+void Model::resetRotation() {
+	rotationQuaternion = ts::Vector::quat(1, 0, 0, 0);
+	modelMatrixNeedsUpdate = true;
+}
+
 void Model::scaleX(float scaleFactor) {
 	scaleVector.x *= scaleFactor;
 	modelMatrixNeedsUpdate = true;
@@ -82,7 +97,7 @@ void Model::scaleZ(float scaleFactor) {
 	modelMatrixNeedsUpdate = true;
 }
 
-void Model::scale(ts::Vector::vec3 scaleVector){
+void Model::scale(ts::Vector::vec3 scaleVector) {
 	this->scaleVector.x *= scaleVector.x;
 	this->scaleVector.y *= scaleVector.y;
 	this->scaleVector.z *= scaleVector.z;
@@ -104,45 +119,13 @@ void Model::setScaleZ(float scaleZ) {
 	modelMatrixNeedsUpdate = true;
 }
 
-void Model::setScale(ts::Vector::vec3 scaleVector){
+void Model::setScale(ts::Vector::vec3 scaleVector) {
 	this->scaleVector = scaleVector;
 	modelMatrixNeedsUpdate = true;
 }
 
 ts::Vector::vec3 Model::getScaleVector() {
 	return scaleVector;
-}
-
-void Model::rotateYaw(int deltaYaw) {
-	yaw += deltaYaw;
-	yaw %= 360;
-	modelMatrixNeedsUpdate = true;
-}
-
-void Model::rotatePitch(int deltaPitch) {
-	pitch += deltaPitch;
-	pitch %= 360;
-	modelMatrixNeedsUpdate = true;
-}
-
-void Model::setYaw(int yaw) {
-	this->yaw = yaw;
-	yaw %= 360;
-	modelMatrixNeedsUpdate = true;
-}
-
-void Model::setPitch(int pitch) {
-	this->pitch = pitch;
-	pitch = (pitch < -89 ? -89 : (pitch > 89 ? 89 : pitch));
-	modelMatrixNeedsUpdate = true;
-}
-
-int Model::getYaw() {
-	return yaw;
-}
-
-int Model::getPitch() {
-	return pitch;
 }
 
 void Model::setMesh(Mesh* mesh) {
@@ -158,16 +141,16 @@ void Model::setTexture(Texture* texture) {
 }
 
 void Model::draw(Camera* camera) {
-	if(mesh == NULL || shaderProgram == NULL){
+	if (mesh == NULL || shaderProgram == NULL) {
 		return;
 	}
-	if(modelMatrixNeedsUpdate){
-		ts::Vector::quat rotation = ts::Vector::angleAxisToQuaternion(yaw, 0, 1, 0) * ts::Vector::angleAxisToQuaternion(pitch, 1, 0, 0);
-		modelMatrix = ts::Vector::translate(position) * ts::Vector::quaternionToMatrix(rotation) * ts::Vector::scale(scaleVector);
+	if (modelMatrixNeedsUpdate) {
+		rotationQuaternion.print();
+		modelMatrix = ts::Vector::translate(position) * ts::Vector::quaternionToMatrix(rotationQuaternion) * ts::Vector::scale(scaleVector);
 		modelMatrixNeedsUpdate = false;
 	}
 
-	if(texture != NULL){
+	if (texture != NULL) {
 		texture->bindTexture();
 	}
 
@@ -189,7 +172,7 @@ void Model::draw(Camera* camera) {
 
 	shaderProgram->disableShaderProgram();
 
-	if(texture != NULL){
+	if (texture != NULL) {
 		texture->unbindTexture();
 	}
 }

@@ -18,8 +18,6 @@
 namespace ts {
 
 TestScene::TestScene() {
-	camera.setPosition(0, 0, 2);
-
 	float vertexData1[] = {
 			0, 0, 0,
 			0, 0, 100,
@@ -57,7 +55,7 @@ TestScene::TestScene() {
 //	plane.translate(-500, 0, -500);
 
 	cameraSpeed = 0;
-	camera.setPosition(camera.getPosition() + ts::Vector::vec3(0, 50, 0));
+	camera.setPosition(camera.getPosition() + ts::Vector::vec3(0, 0, 0));
 }
 
 TestScene::~TestScene() {
@@ -125,9 +123,8 @@ void TestScene::update(time_t dt) {
 		modelPitch = Mouse::getLastMove().y;
 	}
 
-	model2.rotateYaw(modelYaw);
-	model2.rotatePitch(modelPitch);
-
+	model2.rotate(modelPitch, ts::Vector::vec3(1, 0, 0));
+	model2.rotate(modelYaw, ts::Vector::vec3(0, 1, 0));
 }
 
 void TestScene::draw() {
