@@ -47,13 +47,13 @@ TestScene::TestScene() {
 	manager->loadShaderProgram("textureShader", "textureShader");
 	manager->loadTexture("BlockSheet");
 
-	model = Model(manager->getMesh("Sword2"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("MonkeyFaceTexture"));
+	model = Model(manager->getMesh("Plane"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("MonkeyFaceTexture"));
 	model.translate(0, 2, 0);
 	model2 = Model(manager->getMesh("Sword2"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("MonkeyFaceTexture"));
 	model2.translate(3, 2, 0);
-	model2.rotate(45, ts::Vector::vec3(1, 0, 0));
-	model2.rotate(45, ts::Vector::vec3(0, 1, 0));
-	model2.rotate(-45, ts::Vector::vec3(1, 0, -1));
+	model2.rotateGlobal(45, ts::Vector::vec3(1, 0, 0));
+	model2.rotateGlobal(45, ts::Vector::vec3(0, 1, 0));
+	model2.rotateGlobal(-45, ts::Vector::vec3(1, 0, -1));
 	plane = Model(manager->getMesh("Terrain"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("Button1_default"));
 //	plane.translate(-500, 0, -500);
 
@@ -125,9 +125,19 @@ void TestScene::update(time_t dt) {
 		modelYaw = Mouse::getLastMove().x;
 		modelPitch = Mouse::getLastMove().y;
 	}
+	if (ts::Keyboard::isKeyPressed(ts::Keyboard::Up)) {
+		modelPitch++;
+	} else if (ts::Keyboard::isKeyPressed(ts::Keyboard::Down)) {
+		modelPitch--;
+	}
+	if (ts::Keyboard::isKeyPressed(ts::Keyboard::Left)) {
+		modelYaw--;
+	} else if (ts::Keyboard::isKeyPressed(ts::Keyboard::Right)) {
+		modelYaw++;
+	}
 
-	model2.rotate(modelPitch, ts::Vector::vec3(1, 0, 0));
-	model2.rotate(modelYaw, ts::Vector::vec3(0, 1, 0));
+	model.rotateLocal(modelYaw, ts::Vector::vec3(0, 0, 1));
+	model.rotateLocal(modelPitch, ts::Vector::vec3(1, 0, 0));
 }
 
 void TestScene::draw() {

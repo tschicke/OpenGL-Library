@@ -33,10 +33,11 @@ public:
 	void setPosition(ts::Vector::vec3 position);
 	ts::Vector::vec3 getPosition();
 
-	void rotate(float angle, float axisX, float axisY, float axisZ);
-	void rotate(float angle, ts::Vector::vec3 axis);
+	void rotateGlobal(float angle, float axisX, float axisY, float axisZ);
+	void rotateGlobal(float angle, ts::Vector::vec3 axis);
+	void rotateLocal(float angle, float axisX, float axisY, float axisZ);
+	void rotateLocal(float angle, ts::Vector::vec3 axis);
 	void resetRotation();
-
 
 	void scaleX(float scaleFactor);
 	void scaleY(float scaleFactor);

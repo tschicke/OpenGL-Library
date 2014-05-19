@@ -39,7 +39,7 @@ void Model::init(Mesh * mesh, ShaderProgram * shaderProgram, Texture * texture, 
 	this->texture = texture;
 	this->position = position;
 	this->scaleVector = ts::Vector::vec3(1, 1, 1);
-	this->rotationQuaternion = ts::Vector::quat(1, 0, 0, 0);//TODO add rotation initializer in constructor
+	this->rotationQuaternion = ts::Vector::quat(1, 0, 0, 0); //TODO add rotation initializer in constructor
 	modelMatrixNeedsUpdate = true;
 }
 
@@ -68,12 +68,21 @@ ts::Vector::vec3 Model::getPosition() {
 	return position;
 }
 
-void Model::rotate(float angle, float axisX, float axisY, float axisZ) {
-	rotate(angle, ts::Vector::vec3(axisX, axisY, axisZ));
+void Model::rotateGlobal(float angle, float axisX, float axisY, float axisZ) {
+	rotateGlobal(angle, ts::Vector::vec3(axisX, axisY, axisZ));
 }
 
-void Model::rotate(float angle, ts::Vector::vec3 axis) {
+void Model::rotateGlobal(float angle, ts::Vector::vec3 axis) {
 	rotationQuaternion = ts::Vector::angleAxisToQuaternion(angle, axis) * rotationQuaternion;
+	modelMatrixNeedsUpdate = true;
+}
+
+void Model::rotateLocal(float angle, float axisX, float axisY, float axisZ) {
+	rotateLocal(angle, ts::Vector::vec3(axisX, axisY, axisZ));
+}
+
+void Model::rotateLocal(float angle, ts::Vector::vec3 axis) {
+	rotationQuaternion = rotationQuaternion * ts::Vector::angleAxisToQuaternion(angle, axis);
 	modelMatrixNeedsUpdate = true;
 }
 
