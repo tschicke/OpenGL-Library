@@ -10,7 +10,7 @@
 
 #include "Scene.h"
 
-#include "../Util/Camera.h"
+#include "../Util/OldCamera.h"
 #include "../Render/Model.h"
 
 #include "../Input/Keyboard.h"
@@ -27,7 +27,7 @@ public:
 	void draw();
 private:
 	float cameraSpeed;
-	Camera camera;
+	OldCamera camera;
 	Model model, model2;
 	Model plane;
 };

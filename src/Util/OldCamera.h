@@ -1,31 +1,26 @@
 /*
  * Camera.h
  *
- *  Created on: May 19, 2014
- *      Author: tyler
+ *  Created on: Oct 26, 2013
+ *      Author: Tyler
  */
-
-#include "../Vector/Vector.h"
-#include "../Vector/Matrix.h"
-#include "../Vector/Quaternion.h"
 
 #ifndef CAMERA_H_
 #define CAMERA_H_
 
+#include "../Vector/Vector.h"
+#include "../Vector/Matrix.h"
+
 namespace ts {
-namespace Vector {
 
-class Camera {
+class OldCamera {
 public:
-	Camera();
-	Camera(ts::Vector::vec3 position);
+	OldCamera();
+	OldCamera(ts::Vector::vec3 position);
 	void init(ts::Vector::vec3 position);
-	virtual ~Camera();
+	virtual ~OldCamera();
 
-	void rotateLocal(float angle, float xAxis, float yAxis, float zAxis);
-	void rotateLocal(float angle, ts::Vector::vec3 axis);
-	void rotateGlobal(float angle, float xAxis, float yAxis, float zAxis);
-	void rotateGlobal(float angle, ts::Vector::vec3 axis);
+	void rotate(int dx, int dy);
 	void lookAt(float x, float y, float z);
 	void lookAt(ts::Vector::vec3 position);
 	void move(ts::Vector::vec3 moveVector);
@@ -40,15 +35,18 @@ public:
 	void setZ(float z);
 
 	ts::Vector::vec3 getPosition();
+	ts::Vector::vec3 getDirection();
 	ts::Vector::mat4 * getViewMatrix();
-	private:
+private:
 	ts::Vector::vec3 position;
-	ts::Vector::quat rotation;
+	ts::Vector::vec3 lookDir;
+	ts::Vector::vec3 upVector;
 	ts::Vector::mat4 viewMatrix;
+
+	int yaw, pitch;
 
 	bool viewMatrixNeedsUpdate;
 };
 
-} /* namespace Vector */
 } /* namespace ts */
 #endif /* CAMERA_H_ */

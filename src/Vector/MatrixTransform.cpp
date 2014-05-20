@@ -108,11 +108,6 @@ mat4 lookAt(vec3 cameraPosition, vec3 lookCenter, vec3 up) {
 	return result;
 }
 
-mat4 lookAt(vec3 cameraPosition, float yaw, float pitch, float roll) {
-	ts::Vector::quat rotation = ts::Vector::angleAxisToQuaternion(-roll, 0, 0, 1) * ts::Vector::angleAxisToQuaternion(-pitch, 1, 0, 0) * ts::Vector::angleAxisToQuaternion(yaw, 0, 1, 0);
-	return ts::Vector::quaternionToMatrix(rotation) * translate(-cameraPosition);
-}
-
 mat4 scale(vec3 scaleVector) {
 	mat4 result(1.f);
 
