@@ -7,7 +7,7 @@
 
 #include "Model.h"
 
-#include "../Util/OldCamera.h"
+#include "../Util/Camera.h"
 
 #include "../Vector/MatrixTransform.h"
 #include "../Vector/Quaternion.h"
@@ -149,7 +149,7 @@ void Model::setTexture(Texture* texture) {
 	this->texture = texture;
 }
 
-void Model::draw(OldCamera* camera) {
+void Model::draw(Camera* camera) {
 	if (mesh == NULL || shaderProgram == NULL) {
 		return;
 	}

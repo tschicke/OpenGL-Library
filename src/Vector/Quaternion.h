@@ -34,6 +34,8 @@ public:
 		float d, z;
 	};
 
+	Vector3 getAxis();
+
 	void print();
 
 	Quaternion& operator/=(const float scalar);

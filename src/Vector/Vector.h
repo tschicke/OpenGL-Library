@@ -74,6 +74,8 @@ public:
 		float w, a, t;
 	};
 
+	Vector3 xyz();
+
 	float& operator[](std::size_t index);
 	const float& operator[](std::size_t index) const;
 

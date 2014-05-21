@@ -18,6 +18,8 @@ namespace Vector {
 float norm(quat quaternion);
 quat normalize(quat quaternion);
 
+void getQuaternionDirection(quat quaternion, vec3& front, vec3& right, vec3& up);
+
 mat4 quaternionToMatrix(quat quaternion);
 
 quat angleAxisToQuaternion(float angle, vec3 axis);

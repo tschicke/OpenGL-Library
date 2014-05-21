@@ -65,6 +65,10 @@ Quaternion operator /(const Quaternion& q, const float s) {
 	return Quaternion(q) /= s;
 }
 
+Vector3 Quaternion::getAxis(){
+	return vec3(x, y, z);
+}
+
 void Quaternion::print() {
 	std::cout << "(" << a << ", " << b << "i, " << c << "j, " << d << "k)\n";
 }

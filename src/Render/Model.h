@@ -18,7 +18,7 @@
 
 namespace ts {
 
-class OldCamera;
+class Camera;
 
 class Model {
 public:
@@ -53,7 +53,7 @@ public:
 	void setShader(ShaderProgram * shaderProgram);
 	void setTexture(Texture * texture);
 
-	void draw(OldCamera * camera);
+	void draw(Camera * camera);
 
 private:
 	Mesh * mesh;

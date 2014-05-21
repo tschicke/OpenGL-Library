@@ -121,6 +121,10 @@ Vector4::Vector4(float x, float y, float z, float w) {
 	this->w = w;
 }
 
+Vector3 Vector4::xyz(){
+	return vec3(x, y, z);
+}
+
 float& Vector4::operator [](std::size_t index) {
 	assert(index < 4);
 	return (&x)[index];

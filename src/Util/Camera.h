@@ -13,7 +13,6 @@
 #define CAMERA_H_
 
 namespace ts {
-namespace Vector {
 
 class Camera {
 public:
@@ -22,10 +21,10 @@ public:
 	void init(ts::Vector::vec3 position);
 	virtual ~Camera();
 
-	void rotateLocal(float angle, float xAxis, float yAxis, float zAxis);
-	void rotateLocal(float angle, ts::Vector::vec3 axis);
 	void rotateGlobal(float angle, float xAxis, float yAxis, float zAxis);
 	void rotateGlobal(float angle, ts::Vector::vec3 axis);
+	void rotateLocal(float angle, float xAxis, float yAxis, float zAxis);
+	void rotateLocal(float angle, ts::Vector::vec3 axis);
 	void lookAt(float x, float y, float z);
 	void lookAt(ts::Vector::vec3 position);
 	void move(ts::Vector::vec3 moveVector);
@@ -49,6 +48,5 @@ public:
 	bool viewMatrixNeedsUpdate;
 };
 
-} /* namespace Vector */
 } /* namespace ts */
 #endif /* CAMERA_H_ */

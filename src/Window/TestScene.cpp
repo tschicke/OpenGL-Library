@@ -58,7 +58,7 @@ TestScene::TestScene() {
 //	plane.translate(-500, 0, -500);
 
 	cameraSpeed = 0;
-	camera.setPosition(camera.getPosition() + ts::Vector::vec3(0, 0, 0));
+	camera.setPosition(camera.getPosition() + ts::Vector::vec3(0, 3, 0));
 }
 
 TestScene::~TestScene() {
@@ -114,8 +114,9 @@ void TestScene::update(time_t dt) {
 	float mouseDY = Mouse::getLastMove().y * lookSpeed;
 
 	camera.moveInDirection(cameraDX, cameraDY, cameraDZ);
-	if (!Mouse::isMouseButtonPressed(Mouse::Button0)) {
-		camera.rotate(mouseDX, mouseDY);
+	if (Mouse::isMouseButtonPressed(Mouse::Button0)) {
+		camera.rotateLocal(-mouseDY, 1, 0, 0);
+		camera.rotateGlobal(mouseDX, 0, 1, 0);
 	}
 
 	float modelYaw = 0;
@@ -136,6 +137,8 @@ void TestScene::update(time_t dt) {
 		modelYaw++;
 	}
 
+	camera.rotateLocal(modelYaw, 0, 0, 1);
+	camera.rotateLocal(modelPitch, 1, 0, 0);
 	model.rotateLocal(modelYaw, ts::Vector::vec3(0, 0, 1));
 	model.rotateLocal(modelPitch, ts::Vector::vec3(1, 0, 0));
 }

@@ -15,12 +15,22 @@
 namespace ts {
 namespace Vector {
 
-float norm(quat q){
+float norm(quat q) {
 	return sqrt(q.a * q.a + q.b * q.b + q.c * q.c + q.d * q.d);
 }
 
-quat normalize(quat q){
+quat normalize(quat q) {
 	return q / norm(q);
+}
+
+void getQuaternionDirection(quat q, vec3& front, vec3& right, vec3& up) {
+	vec3 vq = q.getAxis();
+	front = vec3(0, 0, -1);
+	right = vec3(1, 0, 0);
+	up = vec3(0, 1, 0);
+	front = front + cross(2 * vq, cross(vq, front) + q.w * front);
+	right = right + cross(2 * vq, cross(vq, right) + q.w * right);
+	up = cross(right, front);
 }
 
 mat4 quaternionToMatrix(quat q) {
