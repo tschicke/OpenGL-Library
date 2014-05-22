@@ -71,7 +71,6 @@ void Camera::moveInDirection(ts::Vector::vec3 moveVector) {
 	ts::Vector::quat temp = rotation;
 	temp.w *= -1;
 	ts::Vector::getQuaternionDirection(temp, front, right, up);
-	front.print();
 	position += front * moveVector.z;
 	position += right * moveVector.x;
 	position += up * moveVector.y;

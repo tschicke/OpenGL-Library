@@ -122,10 +122,6 @@ void TestScene::update(time_t dt) {
 	float modelYaw = 0;
 	float modelPitch = 0;
 
-	if (Mouse::isMouseButtonPressed(Mouse::Button0)) {
-		modelYaw = Mouse::getLastMove().x;
-		modelPitch = Mouse::getLastMove().y;
-	}
 	if (ts::Keyboard::isKeyPressed(ts::Keyboard::Up)) {
 		modelPitch++;
 	} else if (ts::Keyboard::isKeyPressed(ts::Keyboard::Down)) {

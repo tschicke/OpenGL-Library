@@ -1,0 +1,9 @@
+Export skeleton
+Convert skeleton
+Load skeleton
+Export vertex weights
+Convert vertex weights
+Load vertex weights
+Write new shader for skeletons - Done?
+Calculate appropriate number of model matrices
+Pass model matrix array to shader
