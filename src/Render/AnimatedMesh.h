@@ -8,15 +8,26 @@
 #ifndef ANIMATEDMESH_H_
 #define ANIMATEDMESH_H_
 
-namespace ts {
-namespace Vector {
+#include "Mesh.h"
+#include "../Vector/Vector.h"
 
-class AnimatedMesh {
+namespace ts {
+
+class AnimatedMesh : public Mesh{
 public:
+	bool isAnimated();
+
+	void render();
+
+	int getNumBones();
+	Vector::vec3 * getDefaultBonePositions();
+protected:
 	AnimatedMesh();
 	virtual ~AnimatedMesh();
+
+	Vector::vec3 * defaultBonePositions;
+	int numBones;
 };
 
-} /* namespace Vector */
 } /* namespace ts */
 #endif /* ANIMATEDMESH_H_ */

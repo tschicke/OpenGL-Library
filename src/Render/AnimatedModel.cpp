@@ -8,7 +8,6 @@
 #include "AnimatedModel.h"
 
 namespace ts {
-namespace Vector {
 
 AnimatedModel::AnimatedModel()
 {
@@ -21,5 +20,4 @@ AnimatedModel::~AnimatedModel()
 	// TODO Auto-generated destructor stub
 }
 
-} /* namespace Vector */
 } /* namespace ts */

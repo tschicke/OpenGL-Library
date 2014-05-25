@@ -8,19 +8,19 @@
 #ifndef MESH_H_
 #define MESH_H_
 
-#include <vector>
-
 namespace ts {
 
 class Mesh {
 public:
-	Mesh();
-	virtual ~Mesh();
+	virtual bool isAnimated();
 
-	void render();
+	virtual void render();
 
 	friend class ResourceManager;
 protected:
+	Mesh();
+	virtual ~Mesh();
+
 	unsigned int vertexID, indexID;
 	int numVertices, numIndices;
 

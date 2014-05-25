@@ -13,8 +13,6 @@
 #include <GL/glew.h>
 #endif
 
-#include <iostream>
-
 namespace ts {
 
 Mesh::Mesh() {
@@ -26,6 +24,10 @@ Mesh::Mesh() {
 }
 
 Mesh::~Mesh() {
+}
+
+bool Mesh::isAnimated(){
+	return false;
 }
 
 void Mesh::render() {
@@ -56,9 +58,9 @@ void Mesh::render() {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glEnableVertexAttribArray(2);
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
 }
 
 } /* namespace ts */

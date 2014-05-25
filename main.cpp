@@ -21,7 +21,6 @@
 using namespace ts::Vector;
 
 int main() {
-
 //	quat q = angleAxisToQuaternion(90, 0, 1, 0);
 //	vec3 front, right, up;
 //	getQuaternionDirection(q, front, right, up);
