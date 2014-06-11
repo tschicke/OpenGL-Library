@@ -13,20 +13,30 @@
 
 namespace ts {
 
-class AnimatedMesh : public Mesh{
+struct Node {
+public:
+
+private:
+	Vector::vec3 position;
+	Node * parentNode;
+};
+
+class Skeleton {
+public:
+
+	friend class ResourceManager;
+private:
+	Node * nodeArray;
+};
+
+class AnimatedMesh : public Mesh {
 public:
 	bool isAnimated();
 
 	void render();
-
-	int getNumBones();
-	Vector::vec3 * getDefaultBonePositions();
 protected:
 	AnimatedMesh();
 	virtual ~AnimatedMesh();
-
-	Vector::vec3 * defaultBonePositions;
-	int numBones;
 };
 
 } /* namespace ts */

@@ -9,15 +9,11 @@
 
 namespace ts {
 
-AnimatedModel::AnimatedModel()
-{
-	// TODO Auto-generated constructor stub
+AnimatedModel::AnimatedModel() {
 
 }
 
-AnimatedModel::~AnimatedModel()
-{
-	// TODO Auto-generated destructor stub
+AnimatedModel::~AnimatedModel() {
 }
 
 } /* namespace ts */

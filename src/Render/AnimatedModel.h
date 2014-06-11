@@ -16,6 +16,9 @@ class AnimatedModel : public Model {
 public:
 	AnimatedModel();
 	virtual ~AnimatedModel();
+
+protected:
+
 };
 
 } /* namespace ts */

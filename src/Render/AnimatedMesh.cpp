@@ -16,29 +16,16 @@
 namespace ts {
 
 AnimatedMesh::AnimatedMesh() {
-	defaultBonePositions = NULL;
-	numBones = 0;
 }
 
-AnimatedMesh::~AnimatedMesh()
-{
+AnimatedMesh::~AnimatedMesh() {
 }
 
-bool AnimatedMesh::isAnimated()
-{
+bool AnimatedMesh::isAnimated() {
 	return true;
 }
 
-int AnimatedMesh::getNumBones(){
-	return numBones;
-}
-
-Vector::vec3* AnimatedMesh::getDefaultBonePositions(){
-	return defaultBonePositions;
-}
-
-void AnimatedMesh::render()
-{
+void AnimatedMesh::render() {
 	if (vertexID == (unsigned int) (-1) || indexID == (unsigned int) (-1)) {
 		return;
 	}
