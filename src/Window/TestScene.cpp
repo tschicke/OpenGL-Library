@@ -54,7 +54,7 @@ TestScene::TestScene() {
 	model2.rotateGlobal(45, ts::Vector::vec3(1, 0, 0));
 	model2.rotateGlobal(45, ts::Vector::vec3(0, 1, 0));
 	model2.rotateGlobal(-45, ts::Vector::vec3(1, 0, -1));
-	plane = Model(manager->getMesh("Terrain"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("Button1_default"));
+	plane = AnimatedModel(manager->getMesh("Terrain"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("Button1_default"));
 //	plane.translate(-500, 0, -500);
 
 	cameraSpeed = 0;

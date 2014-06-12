@@ -4,7 +4,7 @@ layout(location = 0) in vec3 vertexPosition;
 layout(location = 1) in vec2 vertexUV;
 layout(location = 2) in vec3 vertexNormal;
 
-uniform mat4 NormalMatrix, MVPMatrix;
+uniform mat4 MVPMatrix;
 
 smooth out vec3 position;
 smooth out vec2 UV;

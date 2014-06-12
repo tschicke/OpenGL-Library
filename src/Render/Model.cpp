@@ -10,7 +10,6 @@
 #include "../Util/Camera.h"
 
 #include "../Vector/MatrixTransform.h"
-#include "../Vector/Quaternion.h"
 #include "../Vector/QuaternionOperations.h"
 
 #include "../Window/Window.h"
@@ -38,7 +37,6 @@ void Model::init(Mesh * mesh, ShaderProgram * shaderProgram, Texture * texture, 
 	this->shaderProgram = shaderProgram;
 	this->texture = texture;
 	this->position = position;
-	this->scaleVector = ts::Vector::vec3(1, 1, 1);
 	this->rotationQuaternion = ts::Vector::quat(1, 0, 0, 0); //TODO add rotation initializer in constructor
 	modelMatrixNeedsUpdate = true;
 }
@@ -91,52 +89,6 @@ void Model::resetRotation() {
 	modelMatrixNeedsUpdate = true;
 }
 
-void Model::scaleX(float scaleFactor) {
-	scaleVector.x *= scaleFactor;
-	modelMatrixNeedsUpdate = true;
-}
-
-void Model::scaleY(float scaleFactor) {
-	scaleVector.y *= scaleFactor;
-	modelMatrixNeedsUpdate = true;
-}
-
-void Model::scaleZ(float scaleFactor) {
-	scaleVector.z *= scaleFactor;
-	modelMatrixNeedsUpdate = true;
-}
-
-void Model::scale(ts::Vector::vec3 scaleVector) {
-	this->scaleVector.x *= scaleVector.x;
-	this->scaleVector.y *= scaleVector.y;
-	this->scaleVector.z *= scaleVector.z;
-	modelMatrixNeedsUpdate = true;
-}
-
-void Model::setScaleX(float scaleX) {
-	scaleVector.x = scaleX;
-	modelMatrixNeedsUpdate = true;
-}
-
-void Model::setScaleY(float scaleY) {
-	scaleVector.y = scaleY;
-	modelMatrixNeedsUpdate = true;
-}
-
-void Model::setScaleZ(float scaleZ) {
-	scaleVector.z = scaleZ;
-	modelMatrixNeedsUpdate = true;
-}
-
-void Model::setScale(ts::Vector::vec3 scaleVector) {
-	this->scaleVector = scaleVector;
-	modelMatrixNeedsUpdate = true;
-}
-
-ts::Vector::vec3 Model::getScaleVector() {
-	return scaleVector;
-}
-
 void Model::setMesh(Mesh* mesh) {
 	this->mesh = mesh;
 }
@@ -154,7 +106,7 @@ void Model::draw(Camera* camera) {
 		return;
 	}
 	if (modelMatrixNeedsUpdate) {
-		modelMatrix = ts::Vector::translate(position) * ts::Vector::quaternionToMatrix(rotationQuaternion) * ts::Vector::scale(scaleVector);
+		modelMatrix = ts::Vector::translate(position) * ts::Vector::quaternionToMatrix(rotationQuaternion) ;
 		modelMatrixNeedsUpdate = false;
 	}
 
@@ -166,7 +118,6 @@ void Model::draw(Camera* camera) {
 	ts::Vector::mat4 projectionMatrix = *(ts::Window::getMainWindow()->getProjectionMatrix());
 
 	ts::Vector::mat4 MVPMatrix = projectionMatrix * viewMatrix * modelMatrix;
-//	ts::Vector::mat4 NormalMatrix = ts::Vector::transpose(ts::Vector::inverse(modelMatrix));
 	ts::Vector::mat4 NormalMatrix = ts::Vector::mat4(1);
 
 	shaderProgram->useShaderProgram();

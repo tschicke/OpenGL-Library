@@ -10,33 +10,58 @@
 
 #include "Mesh.h"
 #include "../Vector/Vector.h"
+#include "../Vector/Quaternion.h"
+#include "../Vector/Matrix.h"
 
 namespace ts {
 
 struct Node {
 public:
+	int getNodeIndex();
+	int getParentNodeIndex();
 
+	Vector::vec3 getNodePosition();
+
+	Vector::quat getNodeRotation();
+	void rotateLocal(float angle, Vector::vec3 axis);
+	void rotateGlobal(float angle, Vector::vec3 axis);
+
+	friend class ResourceManager;
 private:
+	int nodeIndex;
+	int parentNodeIndex;
+
 	Vector::vec3 position;
-	Node * parentNode;
+	Vector::quat rotationQuaternion;
 };
 
 class Skeleton {
 public:
+	Vector::mat4 * getMatrixArray();
+	int getNumBones();
+
+	void rotateBoneLocal(int nodeIndex, float angle, Vector::vec3 axis);
+	void rotateBoneGlobal(int nodeIndex, float angle, Vector::vec3 axis);
 
 	friend class ResourceManager;
 private:
-	Node * nodeArray;
+	int numBones;
+	Node * boneArray;
+	Vector::mat4 * modelMatrixArray;
 };
 
 class AnimatedMesh : public Mesh {
 public:
 	bool isAnimated();
 
+	Skeleton getDefaultSkeleton();
+
 	void render();
 protected:
 	AnimatedMesh();
 	virtual ~AnimatedMesh();
+
+	Skeleton defaultSkeleton;//TODO Make pointers and make Skeleton Constructor private?
 };
 
 } /* namespace ts */

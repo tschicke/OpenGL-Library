@@ -2,8 +2,8 @@
 #version 330
 
 uniform mat4 MVPMatrix;
-//uniform mat4 ModelMatrix;//For point light
 uniform mat4 NormalMatrix;
+//uniform mat4 ModelMatrix;//For point light
 
 layout(location = 0) in vec3 vertexPosition;
 layout(location = 1) in vec2 vertexUV;

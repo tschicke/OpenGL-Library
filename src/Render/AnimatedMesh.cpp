@@ -7,6 +7,11 @@
 
 #include "AnimatedMesh.h"
 
+#include <assert.h>
+
+#include "../Vector/QuaternionOperations.h"
+#include "../Vector/MatrixTransform.h"
+
 #ifdef _WIN32
 #include <gl/glew.h>
 #elif defined __linux__
@@ -15,6 +20,59 @@
 
 namespace ts {
 
+//Node functions
+int Node::getNodeIndex(){
+	return nodeIndex;
+}
+
+int Node::getParentNodeIndex(){
+	return parentNodeIndex;
+}
+
+Vector::vec3 Node::getNodePosition(){
+	return position;
+}
+
+Vector::quat Node::getNodeRotation(){
+	return rotationQuaternion;
+}
+
+void Node::rotateLocal(float angle, Vector::vec3 axis){
+	rotationQuaternion = rotationQuaternion * Vector::angleAxisToQuaternion(angle, axis);
+}
+
+void Node::rotateGlobal(float angle, Vector::vec3 axis){
+	rotationQuaternion = Vector::angleAxisToQuaternion(angle, axis) * rotationQuaternion;
+}
+
+//Skeleton Functions
+Vector::mat4 * Skeleton::getMatrixArray(){
+	for(int i = 0; i < numBones; ++i){
+		Node node = boneArray[i];
+		while(node.getParentNodeIndex() != -1){
+			modelMatrixArray[i] = modelMatrixArray[i] * Vector::translate(node.getNodePosition()) * Vector::quaternionToMatrix(node.getNodeRotation());
+			node = boneArray[node.getParentNodeIndex()];
+		}
+	}
+
+	return modelMatrixArray;
+}
+
+int Skeleton::getNumBones(){
+	return numBones;
+}
+
+void Skeleton::rotateBoneLocal(int boneIndex, float angle, Vector::vec3 axis){
+	assert(boneIndex < numBones);
+	boneArray[boneIndex].rotateLocal(angle, axis);
+}
+
+void Skeleton::rotateBoneGlobal(int boneIndex, float angle, Vector::vec3 axis){
+	assert(boneIndex < numBones);
+	boneArray[boneIndex].rotateGlobal(angle, axis);
+}
+
+//AnimatedMesh Functions
 AnimatedMesh::AnimatedMesh() {
 }
 
@@ -23,6 +81,10 @@ AnimatedMesh::~AnimatedMesh() {
 
 bool AnimatedMesh::isAnimated() {
 	return true;
+}
+
+Skeleton AnimatedMesh::getDefaultSkeleton(){
+	return defaultSkeleton;
 }
 
 void AnimatedMesh::render() {

@@ -12,6 +12,7 @@
 
 #include "../Util/Camera.h"
 #include "../Render/Model.h"
+#include "../Render/AnimatedModel.h"
 
 #include "../Input/Keyboard.h"
 #include "../Input/Mouse.h"
@@ -29,7 +30,7 @@ private:
 	float cameraSpeed;
 	Camera camera;
 	Model model, model2;
-	Model plane;
+	AnimatedModel plane;
 };
 
 } /* namespace ts */

@@ -10,15 +10,22 @@
 
 #include "Model.h"
 
+#include "AnimatedMesh.h"
+
 namespace ts {
 
 class AnimatedModel : public Model {
 public:
 	AnimatedModel();
+	using Model::Model;//TODO Should use "using" or declare each constructor individually?
 	virtual ~AnimatedModel();
 
-protected:
+	void rotateBoneLocal(int boneIndex, float angle, Vector::vec3 axis);
+	void rotateBoneGlobal(int boneIndex, float angle, Vector::vec3 axis);
 
+	void draw(Camera * camera);
+protected:
+	Skeleton skeleton;
 };
 
 } /* namespace ts */

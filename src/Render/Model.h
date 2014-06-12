@@ -39,23 +39,13 @@ public:
 	void rotateLocal(float angle, ts::Vector::vec3 axis);
 	void resetRotation();
 
-	void scaleX(float scaleFactor);
-	void scaleY(float scaleFactor);
-	void scaleZ(float scaleFactor);
-	void scale(ts::Vector::vec3 scaleVector);
-	void setScaleX(float scaleX);
-	void setScaleY(float scaleY);
-	void setScaleZ(float scaleZ);
-	void setScale(ts::Vector::vec3 scaleVector);
-	ts::Vector::vec3 getScaleVector();
-
 	void setMesh(Mesh * mesh);
 	void setShader(ShaderProgram * shaderProgram);
 	void setTexture(Texture * texture);
 
-	void draw(Camera * camera);
+	virtual void draw(Camera * camera);
 
-private:
+protected:
 	Mesh * mesh;
 	ShaderProgram * shaderProgram;
 	Texture * texture;
@@ -64,7 +54,6 @@ private:
 	bool modelMatrixNeedsUpdate;
 
 	ts::Vector::vec3 position;
-	ts::Vector::vec3 scaleVector;
 	ts::Vector::quat rotationQuaternion;
 
 	void init(Mesh * mesh, ShaderProgram * shaderProgram, Texture * texture, ts::Vector::vec3 position);
