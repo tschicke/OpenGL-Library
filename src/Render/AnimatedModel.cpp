@@ -53,12 +53,14 @@ void AnimatedModel::draw(Camera * camera) {
 	ts::Vector::mat4 MVPMatrix = projectionMatrix * viewMatrix * modelMatrix;
 	ts::Vector::mat4 NormalMatrix = ts::Vector::mat4(1);
 
-	ts::Vector::mat4 * bones = skeleton.getMatrixArray();
 
 	shaderProgram->useShaderProgram();
 	shaderProgram->setUniform("MVPMatrix", &MVPMatrix);
-	shaderProgram->setUniform("Bones", bones);
 	shaderProgram->setUniform("NormalMatrix", &NormalMatrix);
+	if (mesh->isAnimated()) {
+		ts::Vector::mat4 * bones = skeleton.getMatrixArray();
+		shaderProgram->setUniform("Bones", bones);
+	}
 	//	shaderProgram->setUniform("ModelMatrix", &modelMatrix);
 	//	shaderProgram->setUniform("ViewMatrix", &viewMatrix);
 	//	shaderProgram->setUniform("ProjectionMatrix", &projectionMatrix);

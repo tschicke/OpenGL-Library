@@ -57,11 +57,13 @@ public:
 	Skeleton getDefaultSkeleton();
 
 	void render();
+
+	friend class ResourceManager;
 protected:
 	AnimatedMesh();
 	virtual ~AnimatedMesh();
 
-	Skeleton defaultSkeleton;//TODO Make pointers and make Skeleton Constructor private?
+	Skeleton * defaultSkeleton;//TODO Make pointers and make Skeleton Constructor private?
 };
 
 } /* namespace ts */

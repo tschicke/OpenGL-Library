@@ -7,3 +7,20 @@ Load vertex weights
 Write new shader for skeletons - Done?
 Calculate appropriate number of model matrices
 Pass model matrix array to shader
+
+
+Animated Model Format
+
+v x y z
+
+t u v
+
+n x y z
+
+b b1 b2
+
+w w1 w2
+
+s pX pY pZ bI pI
+
+i 2 3 4

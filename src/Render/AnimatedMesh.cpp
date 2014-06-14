@@ -84,7 +84,7 @@ bool AnimatedMesh::isAnimated() {
 }
 
 Skeleton AnimatedMesh::getDefaultSkeleton(){
-	return defaultSkeleton;
+	return *defaultSkeleton;
 }
 
 void AnimatedMesh::render() {

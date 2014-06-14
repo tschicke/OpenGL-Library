@@ -44,10 +44,10 @@ bool ResourceManager::loadMeshFromFile(std::string meshName) {
 	}
 
 	std::ifstream meshFile;
-	meshFile.open(("models/" + meshName + ".model").c_str());
+	meshFile.open(("models/" + meshName + ".mesh").c_str());
 
 	if (!meshFile.is_open()) {
-		std::cerr << "Error loading mesh: " << meshName << " - could not open file " << meshName << ".model" << std::endl;
+		std::cerr << "Error loading mesh: " << meshName << " - could not open file " << meshName << ".mesh" << std::endl;
 		meshFile.close();
 		return false;
 	}
@@ -147,6 +147,165 @@ bool ResourceManager::loadMeshFromData(std::string meshName, float* vertexData, 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	meshMap.insert(std::pair<std::string, Mesh *>(meshName, mesh));
+
+	return true;
+}
+
+bool ResourceManager::loadAnimatedMeshFromFile(std::string animatedMeshName) {
+	if (animatedMeshMap.find(animatedMeshName) != animatedMeshMap.end()) {
+		std::cerr << "Error loading mesh: " << animatedMeshName << " - mesh with name " << animatedMeshName << " is already loaded" << std::endl;
+		return true;
+	}
+
+	std::ifstream animatedMeshFile;
+	animatedMeshFile.open(("models/" + animatedMeshName + ".amesh").c_str());
+
+	if (!animatedMeshFile.is_open()) {
+		std::cerr << "Error loading mesh: " << animatedMeshName << " - could not open file " << animatedMeshName << ".amesh" << std::endl;
+		animatedMeshFile.close();
+		return false;
+	}
+
+	std::string header;
+	getline(animatedMeshFile, header);
+	if (header.compare("amdl") != 0) {
+		std::cerr << "Error loading mesh: " << animatedMeshName << " - file has incorrect header" << std::endl;
+		animatedMeshFile.close();
+		return false;
+	}
+
+	unsigned int numVertices, numIndices, numBones;
+	std::string nums;
+	getline(animatedMeshFile, nums);
+	std::stringstream stream(nums);
+	stream >> numVertices >> numIndices >> numBones;
+	std::vector<float> vertexData;
+	vertexData.reserve(numVertices * 12); //Times number of floats per vertex; Position(3), UV(2), Normal(3), Bone Index(2), Bone Weight(2)
+	std::vector<float> boneData;
+	boneData.reserve(numBones * 5);
+	std::vector<unsigned int> indexData;
+	indexData.reserve(numIndices);
+
+	std::string line;
+	while (getline(animatedMeshFile, line)) {
+		std::string prefix = line.substr(0, 1);
+		if (prefix == "v") { //Vertex
+			std::stringstream stream(line.substr(1));
+			float x, y, z;
+			stream >> x >> y >> z;
+			vertexData.push_back(x);
+			vertexData.push_back(y);
+			vertexData.push_back(z);
+		} else if (prefix == "t") { //Texture Coordinate
+			std::stringstream stream(line.substr(1));
+			float u, v;
+			stream >> u >> v;
+			vertexData.push_back(u);
+			vertexData.push_back(v);
+		} else if (prefix == "n") { //Normal
+			std::stringstream stream(line.substr(1));
+			float x, y, z;
+			stream >> x >> y >> z;
+			vertexData.push_back(x);
+			vertexData.push_back(y);
+			vertexData.push_back(z);
+		} else if (prefix == "b") { //Bone
+			std::stringstream stream(line.substr(1));
+			float b1, b2;
+			stream >> b1 >> b2;
+			vertexData.push_back(b1);
+			vertexData.push_back(b2);
+		} else if (prefix == "w") { //Weight
+			std::stringstream stream(line.substr(1));
+			float w1, w2;
+			stream >> w1 >> w2;
+			vertexData.push_back(w1);
+			vertexData.push_back(w2);
+		} else if (prefix == "s") { //Skeleton
+			std::stringstream stream(line.substr(1));
+			float pX, pY, pZ, bI, pI; //Position x, Position y, Position Z, Bone index, Parent Index
+			stream >> pX >> pY >> pZ >> bI >> pI;
+			boneData.push_back(pX);
+			boneData.push_back(pY);
+			boneData.push_back(pZ);
+			boneData.push_back(bI);
+			boneData.push_back(pI);
+		} else if (prefix == "i") { //Index
+			std::stringstream stream(line.substr(1));
+			unsigned int i1, i2, i3;
+			stream >> i1 >> i2 >> i3;
+			indexData.push_back(i1);
+			indexData.push_back(i2);
+			indexData.push_back(i3);
+		}
+	}
+
+	animatedMeshFile.close();
+
+	bool loaded = loadAnimatedMeshFromData(animatedMeshName, vertexData.data(), boneData.data(), indexData.data(), numVertices, numIndices, numBones, true);
+
+	return loaded;
+}
+
+bool ResourceManager::loadAnimatedMeshFromData(std::string animatedMeshName, float* vertexData, float * boneData, unsigned int* indexData, int numVertices, int numIndices, int numBones, bool textured) {
+	if (animatedMeshMap.find(animatedMeshName) != animatedMeshMap.end()) {
+		std::cerr << "Error loading mesh: " << animatedMeshName << " - mesh with name " << animatedMeshName << " is already loaded" << std::endl;
+		return true;
+	}
+	if (vertexData == NULL || indexData == NULL) {
+		std::cerr << "Error loading mesh: " << animatedMeshName << " - vertexData or indexData is NULL" << std::endl;
+		return false;
+	}
+	if (numVertices == 0 || numIndices == 0) {
+		std::cerr << "Error loading mesh: " << animatedMeshName << " - numVertices or numIndices is 0" << std::endl;
+		return false;
+	}
+
+	AnimatedMesh * mesh = new AnimatedMesh;
+	mesh->numVertices = numVertices;
+	mesh->numIndices = numIndices;
+	mesh->textured = textured;
+	Skeleton * skeleton = new Skeleton;
+	skeleton->numBones = numBones;
+	skeleton->boneArray = new Node[numBones];
+	skeleton->modelMatrixArray = new ts::Vector::mat4[numBones];
+
+	for (int i = 0; i < numBones; ++i) {
+		Node node;
+		ts::Vector::vec3 nodePosition;
+		nodePosition.x = boneData[(i * 5)];
+		nodePosition.x = boneData[(i * 5) + 1];
+		nodePosition.x = boneData[(i * 5) + 2];
+		node.position = nodePosition;
+		node.nodeIndex = boneData[(i * 5) + 3];
+		node.parentNodeIndex = boneData[(i * 5) + 4];
+
+		skeleton->boneArray[i] = node;
+	}
+
+	mesh->defaultSkeleton = skeleton;
+
+	unsigned int * vertexArrayID = &(mesh->vertexID);
+	unsigned int * indexArrayID = &(mesh->indexID);
+
+	int vertexSize = 3;
+	int colorSize = (textured ? 2 : 3);
+	int normalSize = 3;
+	int boneSize = 2;
+	int weightSize = 2;
+
+	glGenBuffers(1, vertexArrayID);
+	glGenBuffers(1, indexArrayID);
+
+	glBindBuffer(GL_ARRAY_BUFFER, *vertexArrayID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * numVertices * (vertexSize + colorSize + normalSize + boneSize + weightSize), vertexData, GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *indexArrayID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * numIndices, indexData, GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	meshMap.insert(std::pair<std::string, Mesh *>(animatedMeshName, mesh));
 
 	return true;
 }
@@ -373,7 +532,7 @@ bool ResourceManager::modifyMeshTextureData(std::string meshName, float * textur
 	}
 	Mesh * mesh = location->second;
 
-	if (textureOffset + numUVs> mesh->numVertices) {
+	if (textureOffset + numUVs > mesh->numVertices) {
 		std::cout << "Error modifying mesh " << meshName << ": numVertices or vertexOffset is too large" << std::endl;
 		return false;
 	}
@@ -402,7 +561,7 @@ bool ResourceManager::modifyMeshNormalData(std::string meshName, float * normalD
 	}
 	Mesh * mesh = location->second;
 
-	if (normalOffset + numNormals> mesh->numVertices) {
+	if (normalOffset + numNormals > mesh->numVertices) {
 		std::cout << "Error modifying mesh " << meshName << ": numVertices or vertexOffset is too large" << std::endl;
 		return false;
 	}
