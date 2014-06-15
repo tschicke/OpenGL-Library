@@ -14,12 +14,37 @@
 #include "../Vector/MatrixTransform.h"
 #include "../Vector/QuaternionOperations.h"
 
+#include <iostream>
+
 namespace ts {
 
 AnimatedModel::AnimatedModel() {
 }
 
+AnimatedModel::AnimatedModel(Mesh * mesh, ShaderProgram * shaderProgram, Texture * texture)
+:
+		Model(mesh, shaderProgram, texture) {
+	if (mesh->isAnimated()) {
+		skeleton = ((AnimatedMesh *) mesh)->getDefaultSkeleton();
+	}
+}
+
+AnimatedModel::AnimatedModel(Mesh * mesh, ShaderProgram * shaderProgram, Texture * texture, ts::Vector::vec3 position)
+:
+		Model(mesh, shaderProgram, texture, position) {
+	if (mesh->isAnimated()) {
+		skeleton = ((AnimatedMesh *) mesh)->getDefaultSkeleton();
+	}
+}
+
 AnimatedModel::~AnimatedModel() {
+}
+
+void AnimatedModel::setMesh(Mesh * mesh) {
+	Model::setMesh(mesh);
+	if (mesh->isAnimated()) {
+		skeleton = ((AnimatedMesh *) mesh)->getDefaultSkeleton();
+	}
 }
 
 void AnimatedModel::rotateBoneLocal(int boneIndex, float angle, Vector::vec3 axis) {
@@ -53,13 +78,15 @@ void AnimatedModel::draw(Camera * camera) {
 	ts::Vector::mat4 MVPMatrix = projectionMatrix * viewMatrix * modelMatrix;
 	ts::Vector::mat4 NormalMatrix = ts::Vector::mat4(1);
 
-
 	shaderProgram->useShaderProgram();
 	shaderProgram->setUniform("MVPMatrix", &MVPMatrix);
 	shaderProgram->setUniform("NormalMatrix", &NormalMatrix);
 	if (mesh->isAnimated()) {
 		ts::Vector::mat4 * bones = skeleton.getMatrixArray();
-		shaderProgram->setUniform("Bones", bones);
+//		for(int i = 0; i < skeleton.getNumBones(); ++i){
+//			bones[i].print();
+//		}
+		shaderProgram->setUniform("Bones", bones, skeleton.getNumBones());
 	}
 	//	shaderProgram->setUniform("ModelMatrix", &modelMatrix);
 	//	shaderProgram->setUniform("ViewMatrix", &viewMatrix);

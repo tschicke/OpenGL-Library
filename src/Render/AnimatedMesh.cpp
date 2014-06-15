@@ -18,58 +18,83 @@
 #include <GL/glew.h>
 #endif
 
+#include <iostream>
+
 namespace ts {
 
 //Node functions
-int Node::getNodeIndex(){
+int Node::getNodeIndex() {
 	return nodeIndex;
 }
 
-int Node::getParentNodeIndex(){
+int Node::getParentNodeIndex() {
 	return parentNodeIndex;
 }
 
-Vector::vec3 Node::getNodePosition(){
+Vector::vec3 Node::getNodePosition() {
 	return position;
 }
 
-Vector::quat Node::getNodeRotation(){
+Vector::quat Node::getNodeRotation() {
 	return rotationQuaternion;
 }
 
-void Node::rotateLocal(float angle, Vector::vec3 axis){
-	rotationQuaternion = rotationQuaternion * Vector::angleAxisToQuaternion(angle, axis);
+void Node::rotateLocal(float angle, Vector::vec3 axis) {
+	if (angle != 0) {
+		rotationQuaternion = rotationQuaternion * Vector::angleAxisToQuaternion(angle, axis);
+	}
 }
 
-void Node::rotateGlobal(float angle, Vector::vec3 axis){
-	rotationQuaternion = Vector::angleAxisToQuaternion(angle, axis) * rotationQuaternion;
+void Node::rotateGlobal(float angle, Vector::vec3 axis) {
+	if (angle != 0) {
+		rotationQuaternion = Vector::angleAxisToQuaternion(angle, axis) * rotationQuaternion;
+	}
 }
 
 //Skeleton Functions
-Vector::mat4 * Skeleton::getMatrixArray(){
-	for(int i = 0; i < numBones; ++i){
-		Node node = boneArray[i];
-		while(node.getParentNodeIndex() != -1){
-			modelMatrixArray[i] = modelMatrixArray[i] * Vector::translate(node.getNodePosition()) * Vector::quaternionToMatrix(node.getNodeRotation());
-			node = boneArray[node.getParentNodeIndex()];
+Skeleton::Skeleton() {
+	numBones = 0;
+	boneArray = NULL;
+	modelMatrixArray = NULL;
+	matrixArrayNeedsUpdate = true;
+}
+
+Vector::mat4 * Skeleton::getMatrixArray() {
+	if (matrixArrayNeedsUpdate) {
+		for (int i = 0; i < numBones; ++i) {
+			modelMatrixArray[i] = ts::Vector::mat4(1);
+			Node node = boneArray[i];
+			while (node.getParentNodeIndex() != -1) {
+//				modelMatrixArray[i] = modelMatrixArray[i] * Vector::translate(node.getNodePosition()) * Vector::quaternionToMatrix(node.getNodeRotation());
+				modelMatrixArray[i] = Vector::quaternionToMatrix(node.getNodeRotation()) * Vector::translate(node.getNodePosition()) * modelMatrixArray[i];
+				if(i == 2){
+//					std::cout << "Node Index " << node.getNodeIndex() << '\n';
+//					node.getNodePosition().print();
+//					node.getNodeRotation().print();
+				}
+				node = boneArray[node.getParentNodeIndex()];
+			}
 		}
+		matrixArrayNeedsUpdate = false;
 	}
 
 	return modelMatrixArray;
 }
 
-int Skeleton::getNumBones(){
+int Skeleton::getNumBones() {
 	return numBones;
 }
 
-void Skeleton::rotateBoneLocal(int boneIndex, float angle, Vector::vec3 axis){
+void Skeleton::rotateBoneLocal(int boneIndex, float angle, Vector::vec3 axis) {
 	assert(boneIndex < numBones);
 	boneArray[boneIndex].rotateLocal(angle, axis);
+	matrixArrayNeedsUpdate = true;
 }
 
-void Skeleton::rotateBoneGlobal(int boneIndex, float angle, Vector::vec3 axis){
+void Skeleton::rotateBoneGlobal(int boneIndex, float angle, Vector::vec3 axis) {
 	assert(boneIndex < numBones);
 	boneArray[boneIndex].rotateGlobal(angle, axis);
+	matrixArrayNeedsUpdate = true;
 }
 
 //AnimatedMesh Functions
@@ -83,7 +108,7 @@ bool AnimatedMesh::isAnimated() {
 	return true;
 }
 
-Skeleton AnimatedMesh::getDefaultSkeleton(){
+Skeleton AnimatedMesh::getDefaultSkeleton() {
 	return *defaultSkeleton;
 }
 
@@ -112,7 +137,7 @@ void AnimatedMesh::render() {
 	//Normal
 	glVertexAttribPointer(2, normalSize, GL_FLOAT, GL_FALSE, 0, (void *) ((vertexSize + textureSize) * sizeof(float) * numVertices));
 	//Bone Index
-	glVertexAttribPointer(3, boneIndexSize, GL_UNSIGNED_BYTE, GL_FALSE, 0, (void *) ((vertexSize + textureSize + normalSize) * sizeof(float) * numVertices));
+	glVertexAttribPointer(3, boneIndexSize, GL_FLOAT, GL_FALSE, 0, (void *) ((vertexSize + textureSize + normalSize) * sizeof(float) * numVertices));
 	//Bone Weights
 	glVertexAttribPointer(4, boneWeightSize, GL_FLOAT, GL_FALSE, 0, (void *) ((((vertexSize + textureSize + normalSize) * sizeof(float)) + (boneIndexSize * sizeof(unsigned char))) * numVertices));
 

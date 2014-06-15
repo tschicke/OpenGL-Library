@@ -15,10 +15,10 @@ namespace ts {
 namespace Vector {
 
 Matrix4::Matrix4() {
-	columns[0] = vec4(0, 0, 0, 0);
-	columns[1] = vec4(0, 0, 0, 0);
-	columns[2] = vec4(0, 0, 0, 0);
-	columns[3] = vec4(0, 0, 0, 0);
+	columns[0] = vec4(1, 0, 0, 0);
+	columns[1] = vec4(0, 1, 0, 0);
+	columns[2] = vec4(0, 0, 1, 0);
+	columns[3] = vec4(0, 0, 0, 1);
 }
 
 Matrix4::Matrix4(float diagonals) {

@@ -274,8 +274,8 @@ bool ResourceManager::loadAnimatedMeshFromData(std::string animatedMeshName, flo
 		Node node;
 		ts::Vector::vec3 nodePosition;
 		nodePosition.x = boneData[(i * 5)];
-		nodePosition.x = boneData[(i * 5) + 1];
-		nodePosition.x = boneData[(i * 5) + 2];
+		nodePosition.y = boneData[(i * 5) + 1];
+		nodePosition.z = boneData[(i * 5) + 2];
 		node.position = nodePosition;
 		node.nodeIndex = boneData[(i * 5) + 3];
 		node.parentNodeIndex = boneData[(i * 5) + 4];
@@ -305,7 +305,9 @@ bool ResourceManager::loadAnimatedMeshFromData(std::string animatedMeshName, flo
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * numIndices, indexData, GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-	meshMap.insert(std::pair<std::string, Mesh *>(animatedMeshName, mesh));
+	std::pair<std::string, AnimatedMesh *> pair = std::pair<std::string, AnimatedMesh *>(animatedMeshName, mesh);
+
+	animatedMeshMap.insert(pair);
 
 	return true;
 }
@@ -618,6 +620,16 @@ Mesh * ResourceManager::getMesh(std::string meshName) {
 		}
 	}
 	return meshMap.at(meshName);
+}
+
+AnimatedMesh * ResourceManager::getAnimatedMesh(std::string animatedMeshName) {
+	if (animatedMeshMap.find(animatedMeshName) == animatedMeshMap.end()) { //Does not contain
+		bool load = loadAnimatedMeshFromFile(animatedMeshName);
+		if (!load) {
+			return NULL;
+		}
+	}
+	return animatedMeshMap.at(animatedMeshName);
 }
 
 ShaderProgram * ResourceManager::getShaderProgram(std::string vertexShaderName, std::string fragmentShaderName) {

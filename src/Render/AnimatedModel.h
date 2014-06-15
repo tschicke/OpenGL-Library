@@ -14,17 +14,20 @@
 
 namespace ts {
 
-class AnimatedModel : public Model {
+class AnimatedModel: public Model {
 public:
 	AnimatedModel();
-	using Model::Model;//TODO Should use "using" or declare each constructor individually?
+	AnimatedModel(Mesh * mesh, ShaderProgram * shaderProgram, Texture * texture);
+	AnimatedModel(Mesh * mesh, ShaderProgram * shaderProgram, Texture * texture, ts::Vector::vec3 position);
 	virtual ~AnimatedModel();
+
+	void setMesh(Mesh * mesh);
 
 	void rotateBoneLocal(int boneIndex, float angle, Vector::vec3 axis);
 	void rotateBoneGlobal(int boneIndex, float angle, Vector::vec3 axis);
 
 	void draw(Camera * camera);
-protected:
+	protected:
 	Skeleton skeleton;
 };
 

@@ -48,14 +48,14 @@ TestScene::TestScene() {
 	manager->loadTexture("BlockSheet");
 
 	model = Model(manager->getMesh("Plane"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("MonkeyFaceTexture"));
-	model.translate(0, 2, 0);
+	model.translate(-6, 2, 0);
 	model2 = Model(manager->getMesh("Sword2"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("MonkeyFaceTexture"));
 	model2.translate(3, 2, 0);
 	model2.rotateGlobal(45, ts::Vector::vec3(1, 0, 0));
 	model2.rotateGlobal(45, ts::Vector::vec3(0, 1, 0));
 	model2.rotateGlobal(-45, ts::Vector::vec3(1, 0, -1));
-	plane = AnimatedModel(manager->getMesh("Terrain"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("Button1_default"));
-//	plane.translate(-500, 0, -500);
+	plane = AnimatedModel(manager->getAnimatedMesh("Test"), manager->getShaderProgram("animation", "animation"), manager->getTexture("Button1_default"));
+	plane.translate(0, 2, -5);
 
 	cameraSpeed = 0;
 	camera.setPosition(camera.getPosition() + ts::Vector::vec3(0, 3, 0));
@@ -119,24 +119,36 @@ void TestScene::update(time_t dt) {
 		camera.rotateGlobal(mouseDX, 0, 1, 0);
 	}
 
-	float modelYaw = 0;
-	float modelPitch = 0;
+//	float modelYaw = 0;
+//	float modelPitch = 0;
+//
+//	if (ts::Keyboard::isKeyPressed(ts::Keyboard::Up)) {
+//		modelPitch++;
+//	} else if (ts::Keyboard::isKeyPressed(ts::Keyboard::Down)) {
+//		modelPitch--;
+//	}
+//	if (ts::Keyboard::isKeyPressed(ts::Keyboard::Left)) {
+//		modelYaw--;
+//	} else if (ts::Keyboard::isKeyPressed(ts::Keyboard::Right)) {
+//		modelYaw++;
+//	}
+//
+//	camera.rotateLocal(modelYaw, 0, 0, 1);
+//	camera.rotateLocal(modelPitch, 1, 0, 0);
+//	model.rotateLocal(modelYaw, ts::Vector::vec3(0, 0, 1));
+//	model.rotateLocal(modelPitch, ts::Vector::vec3(1, 0, 0));
 
+	float boneRotation = 0;
 	if (ts::Keyboard::isKeyPressed(ts::Keyboard::Up)) {
-		modelPitch++;
+		boneRotation += 1;
 	} else if (ts::Keyboard::isKeyPressed(ts::Keyboard::Down)) {
-		modelPitch--;
+		boneRotation -= 1;
 	}
 	if (ts::Keyboard::isKeyPressed(ts::Keyboard::Left)) {
-		modelYaw--;
 	} else if (ts::Keyboard::isKeyPressed(ts::Keyboard::Right)) {
-		modelYaw++;
 	}
 
-	camera.rotateLocal(modelYaw, 0, 0, 1);
-	camera.rotateLocal(modelPitch, 1, 0, 0);
-	model.rotateLocal(modelYaw, ts::Vector::vec3(0, 0, 1));
-	model.rotateLocal(modelPitch, ts::Vector::vec3(1, 0, 0));
+	plane.rotateBoneGlobal(2, boneRotation, ts::Vector::vec3(0, 0, 1));
 }
 
 void TestScene::draw() {

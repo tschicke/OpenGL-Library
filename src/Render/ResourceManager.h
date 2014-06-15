@@ -41,12 +41,12 @@ public:
 	Texture * getTexture(std::string textureName);
 
 	void deleteMesh(std::string meshName);
-	void deleteAnimatedMesh(std::string animatedMeshName);
+	void deleteAnimatedMesh(std::string animatedMeshName);//TODO implement
 	void deleteShaderProgram(std::string shaderProgramName);
 	void deleteTexture(std::string textureName);
 
 	void cleanupMeshes();
-	void cleanupAnimatedMeshes();
+	void cleanupAnimatedMeshes();//TODO implement
 	void cleanupShaderPrograms();
 	void cleanupTextures();
 

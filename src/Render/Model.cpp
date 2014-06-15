@@ -37,7 +37,6 @@ void Model::init(Mesh * mesh, ShaderProgram * shaderProgram, Texture * texture, 
 	this->shaderProgram = shaderProgram;
 	this->texture = texture;
 	this->position = position;
-	this->rotationQuaternion = ts::Vector::quat(1, 0, 0, 0); //TODO add rotation initializer in constructor
 	modelMatrixNeedsUpdate = true;
 }
 

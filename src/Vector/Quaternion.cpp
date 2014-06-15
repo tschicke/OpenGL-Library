@@ -15,7 +15,8 @@ namespace ts {
 namespace Vector {
 
 Quaternion::Quaternion() {
-	a = b = c = d = 0;
+	a = 1;
+	b = c = d = 0;
 }
 
 Quaternion::Quaternion(float a, float b, float c, float d) {

@@ -37,6 +37,8 @@ private:
 
 class Skeleton {
 public:
+	Skeleton();
+
 	Vector::mat4 * getMatrixArray();
 	int getNumBones();
 
@@ -48,6 +50,8 @@ private:
 	int numBones;
 	Node * boneArray;
 	Vector::mat4 * modelMatrixArray;
+
+	bool matrixArrayNeedsUpdate;
 };
 
 class AnimatedMesh : public Mesh {

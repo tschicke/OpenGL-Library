@@ -39,7 +39,7 @@ public:
 	void rotateLocal(float angle, ts::Vector::vec3 axis);
 	void resetRotation();
 
-	void setMesh(Mesh * mesh);
+	virtual void setMesh(Mesh * mesh);
 	void setShader(ShaderProgram * shaderProgram);
 	void setTexture(Texture * texture);
 
