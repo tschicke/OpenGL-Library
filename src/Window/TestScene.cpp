@@ -139,16 +139,20 @@ void TestScene::update(time_t dt) {
 //	model.rotateLocal(modelPitch, ts::Vector::vec3(1, 0, 0));
 
 	float boneRotation = 0;
+	float boneRotation2 = 0;
 	if (ts::Keyboard::isKeyPressed(ts::Keyboard::Up)) {
 		boneRotation += 1;
 	} else if (ts::Keyboard::isKeyPressed(ts::Keyboard::Down)) {
 		boneRotation -= 1;
 	}
 	if (ts::Keyboard::isKeyPressed(ts::Keyboard::Left)) {
+		boneRotation2 += 1;
 	} else if (ts::Keyboard::isKeyPressed(ts::Keyboard::Right)) {
+		boneRotation2 -= 1;
 	}
 
 	plane.rotateBoneGlobal(2, boneRotation, ts::Vector::vec3(0, 0, 1));
+	plane.rotateBoneGlobal(1, boneRotation2, ts::Vector::vec3(0, 0, 1));
 }
 
 void TestScene::draw() {

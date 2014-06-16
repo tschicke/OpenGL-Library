@@ -65,14 +65,15 @@ Vector::mat4 * Skeleton::getMatrixArray() {
 			modelMatrixArray[i] = ts::Vector::mat4(1);
 			Node node = boneArray[i];
 			while (node.getParentNodeIndex() != -1) {
+				Node parentNode = boneArray[node.getParentNodeIndex()];
 //				modelMatrixArray[i] = modelMatrixArray[i] * Vector::translate(node.getNodePosition()) * Vector::quaternionToMatrix(node.getNodeRotation());
-				modelMatrixArray[i] = Vector::quaternionToMatrix(node.getNodeRotation()) * Vector::translate(node.getNodePosition()) * modelMatrixArray[i];
+				modelMatrixArray[i] = Vector::translate(parentNode.getNodePosition()) * Vector::quaternionToMatrix(node.getNodeRotation()) * Vector::translate(-parentNode.getNodePosition()) * modelMatrixArray[i];
 				if(i == 2){
 //					std::cout << "Node Index " << node.getNodeIndex() << '\n';
 //					node.getNodePosition().print();
 //					node.getNodeRotation().print();
 				}
-				node = boneArray[node.getParentNodeIndex()];
+				node = parentNode;
 			}
 		}
 		matrixArrayNeedsUpdate = false;
