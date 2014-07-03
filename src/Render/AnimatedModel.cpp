@@ -59,6 +59,10 @@ void AnimatedModel::rotateBoneGlobal(int boneIndex, float angle, Vector::vec3 ax
 	skeleton.rotateBoneGlobal(boneIndex, angle, axis);
 }
 
+int AnimatedModel::getNumBones() {
+	return skeleton.getNumBones();
+}
+
 void AnimatedModel::draw(Camera * camera) {
 	if (mesh == NULL || shaderProgram == NULL) {
 		return;

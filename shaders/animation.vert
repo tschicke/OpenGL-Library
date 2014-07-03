@@ -15,7 +15,11 @@ out vec3 normal;
 void main(){
 	UV = vertexUV;
 	
-	mat4 modelMatrix = Bones[int(index.x)] * weights.x + Bones[int(index.y)] * weights.y;
+	mat4 modelMatrix = (Bones[int(index.x)] * weights.x) + (Bones[int(index.y)] * weights.y);
 	normal = vertexNormal;
-	gl_Position = MVPMatrix * modelMatrix * vec4(vertexPosition, 1);
+	vec4 finalPos = vec4(vertexPosition, 1);
+	if(weights.x != 0 || weights.y != 0){
+		finalPos = modelMatrix * finalPos;
+	}
+	gl_Position = MVPMatrix * finalPos;
 }
