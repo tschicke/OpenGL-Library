@@ -47,13 +47,13 @@ TestScene::TestScene() {
 	manager->loadShaderProgram("textureShader", "textureShader");
 	manager->loadTexture("BlockSheet");
 
-	model = Model(manager->getMesh("Plane"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("MonkeyFaceTexture"));
-	model.translate(-6, 2, 0);
-	model2 = Model(manager->getMesh("Sword2"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("MonkeyFaceTexture"));
-	model2.translate(3, 2, 0);
-	model2.rotateGlobal(45, ts::Vector::vec3(1, 0, 0));
-	model2.rotateGlobal(45, ts::Vector::vec3(0, 1, 0));
-	model2.rotateGlobal(-45, ts::Vector::vec3(1, 0, -1));
+	model = Model(manager->getMesh("Test"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("MonkeyFaceTexture"));
+	model.translate(-2, 2, -7);
+	model2 = Model(manager->getMesh("Sphere"), manager->getShaderProgram("textureShader", "textureShader"), manager->getTexture("MonkeyFaceTexture"));
+	model2.translate(2, 2, -7);
+//	model2.rotateGlobal(45, ts::Vector::vec3(1, 0, 0));
+//	model2.rotateGlobal(45, ts::Vector::vec3(0, 1, 0));
+//	model2.rotateGlobal(-45, ts::Vector::vec3(1, 0, -1));
 	plane = AnimatedModel(manager->getAnimatedMesh("Test"), manager->getShaderProgram("animation", "animation"), manager->getTexture("Button1_default"));
 	plane.translate(0, 2, -5);
 
@@ -158,7 +158,7 @@ void TestScene::update(time_t dt) {
 void TestScene::draw() {
 	model.draw(&camera);
 	model2.draw(&camera);
-	plane.draw(&camera);
+//	plane.draw(&camera);
 }
 
 } /* namespace ts */
