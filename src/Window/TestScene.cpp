@@ -93,10 +93,11 @@ void TestScene::update(time_t dt) {
 		cameraDX += 1;
 	}
 	bool skip = false;
-	if (Keyboard::checkKeyEvent(Keyboard::Space) == Keyboard::keyPressed) {
+	//Jump
+	/*if (Keyboard::checkKeyEvent(Keyboard::Space) == Keyboard::keyPressed) {
 		cameraSpeed += 5;
 		skip = true;
-	}
+	}*/
 	cameraDX *= moveSpeed * secondScale;
 	cameraDY *= moveSpeed * secondScale;
 	cameraDZ *= moveSpeed * secondScale;
@@ -151,7 +152,14 @@ void TestScene::update(time_t dt) {
 		boneRotation2 -= 1;
 	}
 
-	plane.rotateBoneGlobal(2, boneRotation, ts::Vector::vec3(0, 0, 1));
+	static int index = 0;
+	if(ts::Keyboard::checkKeyEvent(ts::Keyboard::Space) == ts::Keyboard::keyPressed){
+		index += 1;
+		index %= plane.getNumBones();
+		std::cout << index << '\n';
+	}
+
+	plane.rotateBoneGlobal(index, boneRotation, ts::Vector::vec3(1, 0, 0));
 	plane.rotateBoneGlobal(1, boneRotation2, ts::Vector::vec3(0, 0, 1));
 }
 

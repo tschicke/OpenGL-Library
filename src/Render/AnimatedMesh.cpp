@@ -68,11 +68,6 @@ Vector::mat4 * Skeleton::getMatrixArray() {
 				Node parentNode = boneArray[node.getParentNodeIndex()];
 //				modelMatrixArray[i] = modelMatrixArray[i] * Vector::translate(node.getNodePosition()) * Vector::quaternionToMatrix(node.getNodeRotation());
 				modelMatrixArray[i] = Vector::translate(parentNode.getNodePosition()) * Vector::quaternionToMatrix(node.getNodeRotation()) * Vector::translate(-parentNode.getNodePosition()) * modelMatrixArray[i];
-				if(i == 2){
-//					std::cout << "Node Index " << node.getNodeIndex() << '\n';
-//					node.getNodePosition().print();
-//					node.getNodeRotation().print();
-				}
 				node = parentNode;
 			}
 		}
@@ -140,7 +135,7 @@ void AnimatedMesh::render() {
 	//Bone Index
 	glVertexAttribPointer(3, boneIndexSize, GL_FLOAT, GL_FALSE, 0, (void *) ((vertexSize + textureSize + normalSize) * sizeof(float) * numVertices));
 	//Bone Weights
-	glVertexAttribPointer(4, boneWeightSize, GL_FLOAT, GL_FALSE, 0, (void *) ((((vertexSize + textureSize + normalSize) * sizeof(float)) + (boneIndexSize * sizeof(unsigned char))) * numVertices));
+	glVertexAttribPointer(4, boneWeightSize, GL_FLOAT, GL_FALSE, 0, (void *) ((vertexSize + textureSize + normalSize + boneIndexSize) * sizeof(float) * numVertices));
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexID);
 

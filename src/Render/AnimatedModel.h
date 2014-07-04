@@ -26,6 +26,8 @@ public:
 	void rotateBoneLocal(int boneIndex, float angle, Vector::vec3 axis);
 	void rotateBoneGlobal(int boneIndex, float angle, Vector::vec3 axis);
 
+	int getNumBones();
+
 	void draw(Camera * camera);
 	protected:
 	Skeleton skeleton;

@@ -46,6 +46,7 @@ public:
 	void rotateBoneGlobal(int nodeIndex, float angle, Vector::vec3 axis);
 
 	friend class ResourceManager;
+
 private:
 	int numBones;
 	Node * boneArray;
