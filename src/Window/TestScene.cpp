@@ -159,14 +159,14 @@ void TestScene::update(time_t dt) {
 		std::cout << index << '\n';
 	}
 
-	plane.rotateBoneGlobal(index, boneRotation, ts::Vector::vec3(1, 0, 0));
+	plane.rotateBoneGlobal(index, boneRotation, ts::Vector::vec3(0, 0, 1));
 	plane.rotateBoneGlobal(1, boneRotation2, ts::Vector::vec3(0, 0, 1));
 }
 
 void TestScene::draw() {
 	model.draw(&camera);
 	model2.draw(&camera);
-//	plane.draw(&camera);
+	plane.draw(&camera);
 }
 
 } /* namespace ts */
