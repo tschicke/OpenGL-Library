@@ -66,7 +66,7 @@ Vector::mat4 * Skeleton::getMatrixArray() {
 			Node node = boneArray[i];
 			while (node.getParentNodeIndex() != -1) {
 				Node parentNode = boneArray[node.getParentNodeIndex()];
-//				modelMatrixArray[i] = modelMatrixArray[i] * Vector::translate(node.getNodePosition()) * Vector::quaternionToMatrix(node.getNodeRotation());
+//				modelMatrixArray[i] = modelMatrixArray[i] * Vector::translate(node.getNodePosition()) * Vector::quaternionToMatrix(node.getNodeRotation()) * Vector::translate(-node.getNodePosition());
 				modelMatrixArray[i] = Vector::translate(parentNode.getNodePosition()) * Vector::quaternionToMatrix(node.getNodeRotation()) * Vector::translate(-parentNode.getNodePosition()) * modelMatrixArray[i];
 				node = parentNode;
 			}
@@ -95,6 +95,7 @@ void Skeleton::rotateBoneGlobal(int boneIndex, float angle, Vector::vec3 axis) {
 
 //AnimatedMesh Functions
 AnimatedMesh::AnimatedMesh() {
+	defaultSkeleton = NULL;
 }
 
 AnimatedMesh::~AnimatedMesh() {
