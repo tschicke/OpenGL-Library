@@ -247,7 +247,8 @@ bool ResourceManager::loadAnimatedMeshFromFile(std::string animatedMeshName) {
 	return loaded;
 }
 
-bool ResourceManager::loadAnimatedMeshFromData(std::string animatedMeshName, float* vertexData, float * boneData, unsigned int* indexData, int numVertices, int numIndices, int numBones, bool textured) {
+bool ResourceManager::loadAnimatedMeshFromData(std::string animatedMeshName, float* vertexData, float * boneData, unsigned int* indexData, int numVertices, int numIndices, int numBones,
+		bool textured) {
 	if (animatedMeshMap.find(animatedMeshName) != animatedMeshMap.end()) {
 		std::cerr << "Error loading mesh: " << animatedMeshName << " - mesh with name " << animatedMeshName << " is already loaded" << std::endl;
 		return true;
@@ -497,6 +498,59 @@ bool ResourceManager::loadTexture(std::string textureName) {
 	return true;
 }
 
+bool ResourceManager::loadPoseLibrary(std::string poseLibraryName) {
+	if (poseLibraryMap.find(poseLibraryName) != poseLibraryMap.end()) {
+		std::cerr << "Error loading pose library: " << poseLibraryName << " - " << poseLibraryName << " is already loaded" << std::endl;
+		return true;
+	}
+
+	PoseLibrary * poseLib = new PoseLibrary();
+
+	std::ifstream file(("poses/" + poseLibraryName + ".poslib").c_str());
+	if (!file.is_open()) {
+		std::cerr << "Error loading pose library: " << poseLibraryName << " - invalid file name" << std::endl;
+		return false;
+	}
+
+	std::string header;
+	getline(file, header);
+	if (header.compare("poslib") != 0) {
+		std::cerr << "Error loading pose library: " << poseLibraryName << " - file has incorrect header" << std::endl;
+		file.close();
+		return false;
+	}
+
+	unsigned int numPoses, numBones;
+	std::string nums;
+	getline(file, nums);
+	std::stringstream stream(nums);
+	stream >> numPoses >> numBones;
+
+	std::string poseName;
+	int currentQuatIndex = 0;
+	Vector::quat quatArray[numBones];
+
+	std::string line;
+	while (getline(file, line)) {
+		std::string prefix = line.substr(0, 1);
+		if (prefix == "n") { //Pose name
+			poseName = line.substr(2);
+			currentQuatIndex = 0;
+		} else if (prefix == "q") { //Quaternion
+			std::stringstream stream(line.substr(1));
+			float w, x, y, z;
+			stream >> w >> x >> y >> z;
+			quatArray[currentQuatIndex++] = Vector::quat(w, x, y, z);
+		} else if (prefix == "f") { //Pose finish
+			Pose * pose = new Pose(quatArray, numBones);
+			poseLib->poseMap.insert(std::pair<std::string, Pose *>(poseName, pose));
+		}
+	}
+	poseLibraryMap.insert(std::pair<std::string, PoseLibrary *>(poseLibraryName, poseLib));
+
+	return true;
+}
+
 bool ResourceManager::modifyMeshVertexData(std::string meshName, float * vertexData, int numVertices, int vertexOffset) {
 	std::map<std::string, Mesh *>::iterator location = meshMap.find(meshName);
 	if (location == meshMap.end()) {
@@ -650,6 +704,16 @@ Texture * ResourceManager::getTexture(std::string textureName) {
 		}
 	}
 	return textureMap.at(textureName);
+}
+
+PoseLibrary * ResourceManager::getPoseLibrary(std::string poseLibraryName) {//TODO make variable = find(), so .at does not need to be called
+	if (poseLibraryMap.find(poseLibraryName) == poseLibraryMap.end()) { //Does not contain
+		bool load = loadPoseLibrary(poseLibraryName);
+		if (!load) {
+			return NULL;
+		}
+	}
+	return poseLibraryMap.at(poseLibraryName);
 }
 
 void ResourceManager::deleteMesh(std::string meshName) {

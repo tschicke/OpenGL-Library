@@ -18,7 +18,7 @@
 #include "src/Vector/Matrix.h"
 #include "src/Vector/MatrixTransform.h"
 
-using namespace ts::Vector;
+//using namespace ts::Vector;
 
 int main() {
 //	quat q = angleAxisToQuaternion(90, 0, 1, 0);

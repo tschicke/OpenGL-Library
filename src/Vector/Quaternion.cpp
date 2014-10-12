@@ -51,6 +51,10 @@ const float& Quaternion::operator [](std::size_t index) const {
 	return const_cast<Quaternion&>(*this)[index];
 }
 
+bool Quaternion::operator == (const quat& q) const{
+	return (x == q.x) && (y == q.y) && (z == q.z) && (w == q.w);
+}
+
 Quaternion operator *(const Quaternion& q1, const Quaternion& q2) {
 	Quaternion result;
 

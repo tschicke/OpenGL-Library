@@ -15,6 +15,8 @@
 
 #include "../Render/ResourceManager.h"
 
+#include "../Util/Interpolation.h"
+
 namespace ts {
 
 TestScene::TestScene() {
@@ -54,7 +56,7 @@ TestScene::TestScene() {
 //	model2.rotateGlobal(45, ts::Vector::vec3(1, 0, 0));
 //	model2.rotateGlobal(45, ts::Vector::vec3(0, 1, 0));
 //	model2.rotateGlobal(-45, ts::Vector::vec3(1, 0, -1));
-	plane = AnimatedModel(manager->getAnimatedMesh("Test"), manager->getShaderProgram("animation", "animation"), manager->getTexture("Button1_default"));
+	plane = AnimatedModel(manager->getAnimatedMesh("Body"), manager->getShaderProgram("animation", "animation"), manager->getTexture("Button1_default"));
 	plane.translate(0, 2, -5);
 
 	cameraSpeed = 0;
@@ -95,9 +97,9 @@ void TestScene::update(time_t dt) {
 	bool skip = false;
 	//Jump
 	/*if (Keyboard::checkKeyEvent(Keyboard::Space) == Keyboard::keyPressed) {
-		cameraSpeed += 5;
-		skip = true;
-	}*/
+	 cameraSpeed += 5;
+	 skip = true;
+	 }*/
 	cameraDX *= moveSpeed * secondScale;
 	cameraDY *= moveSpeed * secondScale;
 	cameraDZ *= moveSpeed * secondScale;
@@ -153,14 +155,40 @@ void TestScene::update(time_t dt) {
 	}
 
 	static int index = 0;
-	if(ts::Keyboard::checkKeyEvent(ts::Keyboard::Space) == ts::Keyboard::keyPressed){
+	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::Space) == ts::Keyboard::keyPressed) {
 		index += 1;
 		index %= plane.getNumBones();
 		std::cout << index << '\n';
 	}
 
-	plane.rotateBoneGlobal(index, boneRotation, ts::Vector::vec3(0, 0, 1));
-	plane.rotateBoneGlobal(1, boneRotation2, ts::Vector::vec3(0, 0, 1));
+	plane.rotateBoneGlobal(index, boneRotation, ts::Vector::vec3(0, 1, 0));
+	plane.rotateBoneGlobal(11, boneRotation2, ts::Vector::vec3(1, 0, 0));
+
+	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::R) == ts::Keyboard::keyPressed) {
+		plane.resetSkeleton();
+	}
+
+	int indexArray[] = { 1, 4, 2, 3 };
+	int indexArrayLength = 4;
+	float timePerKeyframe = 0.1;
+	static float x = 0;
+	x += secondScale;
+	x = (x > indexArrayLength * timePerKeyframe ? 0 : x);
+	int poseIndex = floor(x / timePerKeyframe);
+	int nextIndex = poseIndex + 1;
+	nextIndex %= indexArrayLength;
+	PoseLibrary * poseLib = ResourceManager::getResourceManger()->getPoseLibrary("Body");
+	plane.setPose(interpolatePoseLinear(poseLib->getPoseAtIndex(indexArray[poseIndex]), poseLib->getPoseAtIndex(indexArray[nextIndex]), fmodf(x, timePerKeyframe) / timePerKeyframe));
+
+	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::Num1) == ts::Keyboard::keyPressed) {
+		plane.setPose(poseLib->getPose("Standing"));
+	}
+	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::Num2) == ts::Keyboard::keyPressed) {
+		plane.setPose(poseLib->getPose("Default"));
+	}
+	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::Num3) == ts::Keyboard::keyPressed) {
+		plane.setPose(poseLib->getPose("ExtendedLeft"));
+	}
 }
 
 void TestScene::draw() {

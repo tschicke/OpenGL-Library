@@ -51,6 +51,51 @@ void Node::rotateGlobal(float angle, Vector::vec3 axis) {
 	}
 }
 
+void Node::setRotationQuaternion(ts::Vector::quat quat) {
+	if (quat == ts::Vector::quat(0, 0, 0, 0)) {
+		rotationQuaternion = ts::Vector::quat(1, 0, 0, 0);
+	} else {
+		rotationQuaternion = ts::Vector::normalize(quat);
+	}
+}
+
+//Pose Functions
+Pose::Pose() {
+	quatArray = NULL;
+	numBones = 0;
+}
+
+Pose::Pose(ts::Vector::quat * quaternionArray, int numBones) {
+	quatArray = new Vector::quat[numBones];
+	for(int i = 0; i < numBones; ++i){
+		quatArray[i] = quaternionArray[i];
+	}
+	this->numBones = numBones;
+}
+
+ts::Vector::quat * Pose::getQuatArray() {
+	return quatArray;
+}
+
+int Pose::getNumBones() {
+	return numBones;
+}
+
+//PoseLibrary Functions
+Pose PoseLibrary::getPose(std::string poseName){
+	assert(poseMap.find(poseName) != poseMap.end());//TODO try to to use assert
+	return *(poseMap.at(poseName));
+}
+
+Pose PoseLibrary::getPoseAtIndex(unsigned int index){
+	assert(index < poseMap.size());//TODO try to not use assert
+	std::map<std::string, Pose *>::iterator it = poseMap.begin();
+	for(unsigned int i = 0; i < index; ++i){
+		++it;
+	}
+	return *(*it).second;
+}
+
 //Skeleton Functions
 Skeleton::Skeleton() {
 	numBones = 0;
@@ -67,7 +112,8 @@ Vector::mat4 * Skeleton::getMatrixArray() {
 			while (node.getParentNodeIndex() != -1) {
 				Node parentNode = boneArray[node.getParentNodeIndex()];
 //				modelMatrixArray[i] = modelMatrixArray[i] * Vector::translate(node.getNodePosition()) * Vector::quaternionToMatrix(node.getNodeRotation()) * Vector::translate(-node.getNodePosition());
-				modelMatrixArray[i] = Vector::translate(parentNode.getNodePosition()) * Vector::quaternionToMatrix(node.getNodeRotation()) * Vector::translate(-parentNode.getNodePosition()) * modelMatrixArray[i];
+				modelMatrixArray[i] = Vector::translate(parentNode.getNodePosition()) * Vector::quaternionToMatrix(node.getNodeRotation()) * Vector::translate(-parentNode.getNodePosition())
+						* modelMatrixArray[i];
 				node = parentNode;
 			}
 		}
@@ -91,6 +137,27 @@ void Skeleton::rotateBoneGlobal(int boneIndex, float angle, Vector::vec3 axis) {
 	assert(boneIndex < numBones);
 	boneArray[boneIndex].rotateGlobal(angle, axis);
 	matrixArrayNeedsUpdate = true;
+}
+
+void Skeleton::setPose(Pose pose) {
+	assert(pose.getNumBones() == numBones);
+	for (int i = 0; i < numBones; ++i) {
+		boneArray[i].setRotationQuaternion(pose.getQuatArray()[i]);
+	}
+}
+
+Skeleton& Skeleton::operator =(const Skeleton& skeleton2) {
+	numBones = skeleton2.numBones;
+	matrixArrayNeedsUpdate = skeleton2.matrixArrayNeedsUpdate;
+	boneArray = new Node[numBones];
+	modelMatrixArray = new ts::Vector::mat4[numBones];
+
+	for (int i = 0; i < numBones; ++i) {
+		boneArray[i] = skeleton2.boneArray[i];
+		modelMatrixArray[i] = skeleton2.modelMatrixArray[i];
+	}
+
+	return *this;
 }
 
 //AnimatedMesh Functions

@@ -40,6 +40,8 @@ public:
 
 	Quaternion& operator/=(const float scalar);
 
+	bool operator == (const Quaternion& quaternion) const;
+
 	float& operator[](std::size_t index);
 	const float& operator[](std::size_t index) const;
 };

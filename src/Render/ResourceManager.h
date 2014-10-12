@@ -28,6 +28,7 @@ public:
 	bool loadAnimatedMeshFromData(std::string animatedMeshName, float * vertexData, float * boneData, unsigned int * indexData, int numVertices, int numIndices, int numBones, bool textured);
 	bool loadShaderProgram(std::string vertexShaderName, std::string fragmentShaderName);
 	bool loadTexture(std::string textureName);
+	bool loadPoseLibrary(std::string poseLibraryName);
 
 	bool modifyMeshVertexData(std::string meshName, float * vertexData, int numVertices, int vertexOffset);
 	//TODO add modify animated mesh
@@ -39,16 +40,19 @@ public:
 	AnimatedMesh * getAnimatedMesh(std::string animatedMeshName);
 	ShaderProgram * getShaderProgram(std::string vertexShaderName, std::string fragmentShaderName);
 	Texture * getTexture(std::string textureName);
+	PoseLibrary * getPoseLibrary(std::string poseLibraryName);
 
 	void deleteMesh(std::string meshName);
 	void deleteAnimatedMesh(std::string animatedMeshName);//TODO implement
 	void deleteShaderProgram(std::string shaderProgramName);
 	void deleteTexture(std::string textureName);
+	//TODO add deletePoseLibrary
 
 	void cleanupMeshes();
 	void cleanupAnimatedMeshes();//TODO implement
 	void cleanupShaderPrograms();
 	void cleanupTextures();
+	//TODO add cleanupPoseLibrary
 
 	void cleanupAll();
 
@@ -62,6 +66,7 @@ private:
 	std::map<std::string, AnimatedMesh *> animatedMeshMap;
 	std::map<std::string, ShaderProgram *> shaderProgramMap;
 	std::map<std::string, Texture *> textureMap;
+	std::map<std::string, PoseLibrary *> poseLibraryMap;
 };
 
 } /* namespace ts */

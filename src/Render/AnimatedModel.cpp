@@ -63,6 +63,20 @@ int AnimatedModel::getNumBones() {
 	return skeleton.getNumBones();
 }
 
+void AnimatedModel::setPose(Pose pose){
+	skeleton.setPose(pose);
+}
+
+void AnimatedModel::resetSkeleton() {
+	if (mesh == NULL) {
+		return;
+	}
+	if (!mesh->isAnimated()) {
+		return;
+	}
+	skeleton = ((AnimatedMesh *) mesh)->getDefaultSkeleton();
+}
+
 void AnimatedModel::draw(Camera * camera) {
 	if (mesh == NULL || shaderProgram == NULL) {
 		return;

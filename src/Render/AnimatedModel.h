@@ -28,6 +28,9 @@ public:
 
 	int getNumBones();
 
+	void setPose(Pose pose);//TODO Should be pointer?
+	void resetSkeleton();//TODO make default pose in skeleton and use that to reset it
+
 	void draw(Camera * camera);
 	protected:
 	Skeleton skeleton;
