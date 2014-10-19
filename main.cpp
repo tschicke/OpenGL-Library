@@ -18,16 +18,9 @@
 #include "src/Vector/Matrix.h"
 #include "src/Vector/MatrixTransform.h"
 
-//using namespace ts::Vector;
+using namespace ts::Vector;
 
 int main() {
-//	quat q = angleAxisToQuaternion(90, 0, 1, 0);
-//	vec3 front, right, up;
-//	getQuaternionDirection(q, front, right, up);
-//	front.print();
-//	right.print();
-//	up.print();
-
 	ts::Window * mainWindow = ts::Window::getMainWindow();
 	mainWindow->create(1280, 720, 90, "OGL Lib");
 	mainWindow->setBackgroundColorf(0.5f, 0.5f, 0.5f);

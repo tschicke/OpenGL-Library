@@ -87,15 +87,6 @@ Pose PoseLibrary::getPose(std::string poseName){
 	return *(poseMap.at(poseName));
 }
 
-Pose PoseLibrary::getPoseAtIndex(unsigned int index){
-	assert(index < poseMap.size());//TODO try to not use assert
-	std::map<std::string, Pose *>::iterator it = poseMap.begin();
-	for(unsigned int i = 0; i < index; ++i){
-		++it;
-	}
-	return *(*it).second;
-}
-
 //Skeleton Functions
 Skeleton::Skeleton() {
 	numBones = 0;

@@ -55,7 +55,6 @@ private:
 struct PoseLibrary {//TODO is this necessary?
 public:
 	Pose getPose(std::string poseName);
-	Pose getPoseAtIndex(unsigned int index);
 
 	friend class ResourceManager;
 private:

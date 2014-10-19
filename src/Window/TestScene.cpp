@@ -56,7 +56,7 @@ TestScene::TestScene() {
 //	model2.rotateGlobal(45, ts::Vector::vec3(1, 0, 0));
 //	model2.rotateGlobal(45, ts::Vector::vec3(0, 1, 0));
 //	model2.rotateGlobal(-45, ts::Vector::vec3(1, 0, -1));
-	plane = AnimatedModel(manager->getAnimatedMesh("Body"), manager->getShaderProgram("animation", "animation"), manager->getTexture("Button1_default"));
+	plane = AnimatedModel(manager->getAnimatedMesh("newBody"), manager->getShaderProgram("animation", "animation"), manager->getTexture("Button1_default"));
 	plane.translate(0, 2, -5);
 
 	cameraSpeed = 0;
@@ -161,33 +161,40 @@ void TestScene::update(time_t dt) {
 		std::cout << index << '\n';
 	}
 
-	plane.rotateBoneGlobal(index, boneRotation, ts::Vector::vec3(0, 1, 0));
+	plane.rotateBoneGlobal(index, boneRotation, ts::Vector::vec3(1, 0, 0));
 	plane.rotateBoneGlobal(11, boneRotation2, ts::Vector::vec3(1, 0, 0));
 
 	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::R) == ts::Keyboard::keyPressed) {
 		plane.resetSkeleton();
 	}
 
-	int indexArray[] = { 1, 4, 2, 3 };
+	std::string poseArray[] = {"MiddleLeft", "ExtendLeft", "MiddleRight", "ExtendRight"};
 	int indexArrayLength = 4;
-	float timePerKeyframe = 0.1;
+	float timePerKeyframe = 0.2;
 	static float x = 0;
 	x += secondScale;
 	x = (x > indexArrayLength * timePerKeyframe ? 0 : x);
-	int poseIndex = floor(x / timePerKeyframe);
-	int nextIndex = poseIndex + 1;
-	nextIndex %= indexArrayLength;
-	PoseLibrary * poseLib = ResourceManager::getResourceManger()->getPoseLibrary("Body");
-	plane.setPose(interpolatePoseLinear(poseLib->getPoseAtIndex(indexArray[poseIndex]), poseLib->getPoseAtIndex(indexArray[nextIndex]), fmodf(x, timePerKeyframe) / timePerKeyframe));
+	int i1 = floor(x / timePerKeyframe);
+	int i0 = (i1 - 1 < 0 ? i1 - 1 + indexArrayLength : i1 - 1);
+	int i2 = i1 + 1;
+	int i3 = i1 + 2;
+	i2 %= indexArrayLength;
+	i3 %= indexArrayLength;
+	PoseLibrary * poseLib = ResourceManager::getResourceManger()->getPoseLibrary("newBody");
+//	plane.setPose(interpolatePoseLinear(poseLib->getPose(poseArray[i1]), poseLib->getPose(poseArray[i2]), fmodf(x, timePerKeyframe) / timePerKeyframe));
+//	plane.setPose(interpolatePoseCubic(poseLib->getPose(poseArray[i0]), poseLib->getPose(poseArray[i1]), poseLib->getPose(poseArray[i2]), poseLib->getPose(poseArray[i3]), fmodf(x, timePerKeyframe) / timePerKeyframe));
 
 	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::Num1) == ts::Keyboard::keyPressed) {
-		plane.setPose(poseLib->getPose("Standing"));
+		plane.setPose(poseLib->getPose("MiddleLeft"));
 	}
 	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::Num2) == ts::Keyboard::keyPressed) {
-		plane.setPose(poseLib->getPose("Default"));
+		plane.setPose(poseLib->getPose("ExtendLeft"));
 	}
 	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::Num3) == ts::Keyboard::keyPressed) {
-		plane.setPose(poseLib->getPose("ExtendedLeft"));
+		plane.setPose(poseLib->getPose("MiddleRight"));
+	}
+	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::Num4) == ts::Keyboard::keyPressed) {
+		plane.setPose(poseLib->getPose("ExtendRight"));
 	}
 }
 

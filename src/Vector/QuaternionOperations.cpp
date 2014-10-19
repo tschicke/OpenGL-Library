@@ -23,6 +23,14 @@ quat normalize(quat q) {
 	return q / norm(q);
 }
 
+quat conjugate(quat q){
+	return Quaternion(q.w, -q.x, -q.y, -q.z);
+}
+
+quat inverse(quat q){
+	return conjugate(q) / norm(q);
+}
+
 void getQuaternionDirection(quat q, vec3& front, vec3& right, vec3& up) {
 	vec3 vq = q.getAxis();
 	front = vec3(0, 0, -1);
@@ -61,6 +69,22 @@ quat angleAxisToQuaternion(float angle, vec3 axis) {
 
 quat angleAxisToQuaternion(float angle, float axisX, float axisY, float axisZ) {
 	return angleAxisToQuaternion(angle, vec3(axisX, axisY, axisZ));
+}
+
+quat angleBetweenVectors(vec3 v1, vec3 v2) {
+	v1 = normalize(v1);
+	v2 = normalize(v2);
+	float dotProd = dot(v1, v2);
+	if (dotProd == -1) { //180 degree rotation
+		float dotProd2 = dot(v1, vec3(1, 0, 0));
+		if (dotProd2 < 1.0) {
+			return angleAxisToQuaternion(180, cross(v1, vec3(1, 0, 0)));
+		} else {
+			return angleAxisToQuaternion(180, cross(v1, vec3(0, 1, 0)));
+		}
+	}
+	vec3 crossProd = cross(v1, v2);
+	return normalize(Quaternion(dotProd + 1, crossProd.x, crossProd.y, crossProd.z));
 }
 
 } /* namespace Vector */
