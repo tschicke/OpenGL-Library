@@ -38,7 +38,10 @@ public:
 
 	void print();
 
+	Quaternion& operator+=(const Quaternion& q);
+	Quaternion& operator-=(const Quaternion& q);
 	Quaternion& operator/=(const float scalar);
+	Quaternion& operator*=(const float scalar);
 
 	bool operator == (const Quaternion& quaternion) const;
 
@@ -46,7 +49,11 @@ public:
 	const float& operator[](std::size_t index) const;
 };
 
+Quaternion operator+(const Quaternion& q1, const Quaternion& q2);
+Quaternion operator-(const Quaternion& q1, const Quaternion& q2);
 Quaternion operator*(const Quaternion& q1, const Quaternion& q2);
+Quaternion operator*(const Quaternion& quaternion, const float scalar);
+Quaternion operator*(const float scalar, const Quaternion& quaternion);
 Quaternion operator/(const Quaternion& quaternion, const float scalar);
 
 typedef Quaternion quat;

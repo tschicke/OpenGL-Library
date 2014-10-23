@@ -30,7 +30,7 @@ private:
 	float cameraSpeed;
 	Camera camera;
 	Model model, model2;
-	AnimatedModel plane;
+	AnimatedModel plane, plane2;
 };
 
 } /* namespace ts */

@@ -25,7 +25,7 @@ AnimatedModel::AnimatedModel(Mesh * mesh, ShaderProgram * shaderProgram, Texture
 :
 		Model(mesh, shaderProgram, texture) {
 	if (mesh->isAnimated()) {
-		skeleton = ((AnimatedMesh *) mesh)->getDefaultSkeleton();
+		skeleton = ((AnimatedMesh *) mesh)->getDefaultSkeleton();//FIXME does this need to use copy constuctor?
 	}
 }
 

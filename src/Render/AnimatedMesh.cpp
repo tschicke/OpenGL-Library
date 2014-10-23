@@ -67,7 +67,7 @@ Pose::Pose() {
 
 Pose::Pose(ts::Vector::quat * quaternionArray, int numBones) {
 	quatArray = new Vector::quat[numBones];
-	for(int i = 0; i < numBones; ++i){
+	for (int i = 0; i < numBones; ++i) {
 		quatArray[i] = quaternionArray[i];
 	}
 	this->numBones = numBones;
@@ -82,8 +82,8 @@ int Pose::getNumBones() {
 }
 
 //PoseLibrary Functions
-Pose PoseLibrary::getPose(std::string poseName){
-	assert(poseMap.find(poseName) != poseMap.end());//TODO try to to use assert
+Pose PoseLibrary::getPose(std::string poseName) {
+	assert(poseMap.find(poseName) != poseMap.end()); //TODO try to to use assert
 	return *(poseMap.at(poseName));
 }
 
@@ -102,7 +102,6 @@ Vector::mat4 * Skeleton::getMatrixArray() {
 			Node node = boneArray[i];
 			while (node.getParentNodeIndex() != -1) {
 				Node parentNode = boneArray[node.getParentNodeIndex()];
-//				modelMatrixArray[i] = modelMatrixArray[i] * Vector::translate(node.getNodePosition()) * Vector::quaternionToMatrix(node.getNodeRotation()) * Vector::translate(-node.getNodePosition());
 				modelMatrixArray[i] = Vector::translate(parentNode.getNodePosition()) * Vector::quaternionToMatrix(node.getNodeRotation()) * Vector::translate(-parentNode.getNodePosition())
 						* modelMatrixArray[i];
 				node = parentNode;
@@ -135,6 +134,7 @@ void Skeleton::setPose(Pose pose) {
 	for (int i = 0; i < numBones; ++i) {
 		boneArray[i].setRotationQuaternion(pose.getQuatArray()[i]);
 	}
+	matrixArrayNeedsUpdate = true;
 }
 
 Skeleton& Skeleton::operator =(const Skeleton& skeleton2) {

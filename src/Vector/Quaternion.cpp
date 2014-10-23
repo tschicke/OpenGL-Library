@@ -33,6 +33,33 @@ Quaternion::Quaternion(float a, vec3 vector) {
 	this->d = vector.z;
 }
 
+Quaternion& Quaternion::operator+=(const Quaternion& q) {
+	a += q.a;
+	b += q.b;
+	c += q.c;
+	d += q.d;
+
+	return *this;
+}
+
+Quaternion& Quaternion::operator-=(const Quaternion& q) {
+	a -= q.a;
+	b -= q.b;
+	c -= q.c;
+	d -= q.d;
+
+	return *this;
+}
+
+Quaternion& Quaternion::operator*=(const float scalar) {
+	a *= scalar;
+	b *= scalar;
+	c *= scalar;
+	d *= scalar;
+
+	return *this;
+}
+
 Quaternion& Quaternion::operator/=(const float scalar) {
 	a /= scalar;
 	b /= scalar;
@@ -51,8 +78,16 @@ const float& Quaternion::operator [](std::size_t index) const {
 	return const_cast<Quaternion&>(*this)[index];
 }
 
-bool Quaternion::operator == (const quat& q) const{
+bool Quaternion::operator ==(const quat& q) const {
 	return (x == q.x) && (y == q.y) && (z == q.z) && (w == q.w);
+}
+
+Quaternion operator+(const Quaternion& q1, const Quaternion& q2) {
+	return Quaternion(q1) += q2;
+}
+
+Quaternion operator-(const Quaternion& q1, const Quaternion& q2) {
+	return Quaternion(q1) -= q2;
 }
 
 Quaternion operator *(const Quaternion& q1, const Quaternion& q2) {
@@ -66,11 +101,19 @@ Quaternion operator *(const Quaternion& q1, const Quaternion& q2) {
 	return result;
 }
 
+Quaternion operator*(const Quaternion& q, const float s) {
+	return Quaternion(q) *= s;
+}
+
+Quaternion operator*(const float s, const Quaternion& q) {
+	return Quaternion(q) *= s;
+}
+
 Quaternion operator /(const Quaternion& q, const float s) {
 	return Quaternion(q) /= s;
 }
 
-Vector3 Quaternion::getAxis(){
+Vector3 Quaternion::getAxis() {
 	return vec3(x, y, z);
 }
 
